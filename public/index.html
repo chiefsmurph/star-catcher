@@ -284,10 +284,10 @@
             e.preventDefault();
           }
         );
-        
+
         var $dragging = null;
 
-        $(document.body).on("mousemove touchmove", function(e) {
+        $(document.body).on("mousemove", function(e) {
             if ($dragging) {
                 $dragging.css({
                     left: e.pageX - 50
@@ -295,6 +295,13 @@
             }
         });
 
+        $(document.body).on("touchmove", function(e) {
+            if ($dragging) {
+                $dragging.css({
+                    left: e.targetTouches[0].pageX - 50
+                });
+            }
+        });
 
         $(document.body).on("mousedown touchstart", "#bucket", function (e) {
             $dragging = ($dragging) ? null : $('#bucket');
