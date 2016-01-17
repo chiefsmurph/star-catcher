@@ -319,8 +319,9 @@
               $dragging = ($dragging) ? null : $('#bucket');
               if (!inGame) {
                 $('#directions').fadeOut('slow', function() {
-                  $('#scoreboard').animate({top: '10px'}, 2000);
-                  startGame();
+                  $('#scoreboard').animate({top: '10px'}, 2000, function() {
+                    startGame();
+                  });
                 });
               }
           });
