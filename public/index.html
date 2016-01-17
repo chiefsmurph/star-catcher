@@ -3,7 +3,9 @@
     <title>Star Catcher</title>
     <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
     <style>
-
+    html, body {
+      overflow:hidden;
+    }
     * {
       -moz-user-select: none;
       -khtml-user-select: none;
@@ -12,7 +14,6 @@
       cursor: default;
     }
     body {
-      overflow: hidden;
       font-family: 'Audiowide', cursive;
     }
     #directions {
@@ -276,6 +277,14 @@
 
 
     $(document).ready(function() {
+
+        $(window).bind(
+          'touchmove',
+           function(e) {
+            e.preventDefault();
+          }
+        );
+        
         var $dragging = null;
 
         $(document.body).on("mousemove touchmove", function(e) {
