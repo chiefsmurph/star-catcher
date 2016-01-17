@@ -304,7 +304,7 @@
           $(document.body).on("touchmove", function(e) {
               if ($dragging) {
                   $dragging.css({
-                      left: e.targetTouches[0].pageX - 50
+                      left: e.originalEvent.touches[0].pageX- 50
                   });
               }
           });
