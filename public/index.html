@@ -114,11 +114,13 @@
 
     var height, width;
     var spaceBtnDrops = 2000;
+    var levelData = JSON.parse('[{"x":59,"time":1678},{"x":174,"time":2282},{"x":316,"time":2743},{"x":466,"time":3413},{"x":585,"time":3994},{"x":695,"time":4502},{"x":805,"time":4998},{"x":905,"time":5520},{"x":998,"time":6043},{"x":1068,"time":6727},{"x":892,"time":7228},{"x":715,"time":7704},{"x":561,"time":8240},{"x":400,"time":8758},{"x":287,"time":9324},{"x":167,"time":9874},{"x":88,"time":10540},{"x":196,"time":11138},{"x":297,"time":11786},{"x":388,"time":12958},{"x":484,"time":13626},{"x":578,"time":14176},{"x":671,"time":14870},{"x":782,"time":15356},{"x":901,"time":15766},{"x":965,"time":16268},{"x":999,"time":16754},{"x":1051,"time":17281},{"x":962,"time":17757},{"x":809,"time":18181},{"x":642,"time":18638},{"x":493,"time":19063},{"x":334,"time":19525},{"x":217,"time":20036},{"x":82,"time":20506},{"x":-16,"time":21096},{"x":46,"time":21769},{"x":142,"time":22256},{"x":172,"time":22782},{"x":281,"time":23231},{"x":320,"time":23797},{"x":421,"time":24180},{"x":513,"time":24893},{"x":668,"time":26125},{"x":743,"time":26589},{"x":821,"time":27067},{"x":905,"time":27447},{"x":991,"time":27940},{"x":1045,"time":28283},{"x":1046,"time":28599},{"x":993,"time":28935},{"x":961,"time":29314},{"x":879,"time":29550},{"x":853,"time":29799},{"x":809,"time":30011},{"x":805,"time":30227},{"x":732,"time":30489},{"x":708,"time":30749},{"x":693,"time":31189},{"x":656,"time":31409},{"x":620,"time":31675},{"x":622,"time":31950},{"x":570,"time":32271},{"x":521,"time":32585},{"x":461,"time":32869},{"x":461,"time":33119},{"x":368,"time":33409},{"x":367,"time":33669},{"x":315,"time":33905},{"x":315,"time":34195},{"x":250,"time":34464},{"x":197,"time":34761},{"x":197,"time":34996},{"x":152,"time":35223},{"x":119,"time":35483},{"x":119,"time":35717},{"x":58,"time":36025},{"x":49,"time":36471},{"x":24,"time":36732},{"x":47,"time":36989},{"x":126,"time":37217},{"x":149,"time":37421},{"x":190,"time":37641},{"x":197,"time":37935},{"x":214,"time":38200},{"x":295,"time":38660},{"x":298,"time":38913},{"x":326,"time":39342},{"x":335,"time":39589},{"x":362,"time":39809},{"x":368,"time":40429},{"x":425,"time":40891},{"x":426,"time":41189},{"x":459,"time":41719},{"x":549,"time":42261},{"x":604,"time":42600},{"x":655,"time":43045},{"x":692,"time":43282},{"x":708,"time":43517},{"x":743,"time":43862},{"x":772,"time":44301},{"x":905,"time":44647},{"x":984,"time":45110},{"x":1025,"time":45425},{"x":1071,"time":45763},{"x":1075,"time":46273},{"x":961,"time":46845},{"x":751,"time":47269},{"x":619,"time":47693},{"x":418,"time":48108},{"x":271,"time":48809},{"x":140,"time":49263},{"x":405,"time":49666},{"x":619,"time":50072},{"x":713,"time":50346},{"x":855,"time":50770}]');
 
-    var dropStar = function() {
+    var dropStar = function(x) {
       var starEl = $('<img src="img/golden-star.svg.png" class="star">');
 
-      starEl.css('left', Math.round(Math.random() * (width-50) ) + 'px' );
+      x = (x) ? x : Math.round(Math.random() * (width-50) );
+      starEl.css('left', x + 'px' );
       starEl.css('top', '-50px');
       $('#gamearea').append(starEl);
 
@@ -166,12 +168,19 @@
       height = $(window).height();
       width = $(window).width();
 
-      (function startStars() {
-        dropStar();
-        if (spaceBtnDrops > 100) spaceBtnDrops *= 0.97;
-        //console.log(spaceBtnDrops);
-        setTimeout(startStars, spaceBtnDrops);
-      })();
+      // (function startStars() {
+      //   dropStar();
+      //   if (spaceBtnDrops > 100) spaceBtnDrops *= 0.97;
+      //   //console.log(spaceBtnDrops);
+      //   setTimeout(startStars, spaceBtnDrops);
+      // })();
+
+      // handle levelData
+      levelData.forEach(function(star) {
+        setTimeout(function() {
+          dropStar(star.x);
+        }, star.time);
+      });
 
     });
 
@@ -184,7 +193,7 @@
     $(document).ready(function() {
         var $dragging = null;
 
-        $(document.body).on("mousemove", function(e) {
+        $(document.body).on("mousemove touchmove", function(e) {
             if ($dragging) {
                 $dragging.css({
                     left: e.pageX - 50
@@ -193,12 +202,12 @@
         });
 
 
-        $(document.body).on("mousedown", "#bucket", function (e) {
+        $(document.body).on("mousedown touchstart", "#bucket", function (e) {
             $dragging = ($dragging) ? null : $('#bucket');
         });
 
         // $(document.body).on("mouseup", function (e) {
-        //     $dragging = null;
+        //     if ($dragging) $dragging = null;
         // });
 
         $('img').on('dragstart', function(event) { event.preventDefault(); });
