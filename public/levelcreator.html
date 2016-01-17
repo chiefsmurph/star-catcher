@@ -42,7 +42,7 @@
     var dropStar = function(x) {
 
       data.push({
-        x: x,
+        x: Math.round(x / width * 100),
         time: (new Date().getTime()) - startTime
       });
       var starEl = $('<img src="img/golden-star.svg.png" class="star">');
