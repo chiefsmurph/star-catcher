@@ -287,41 +287,48 @@
 
         var $dragging = null;
 
-        $(document.body).on("mousemove", function(e) {
-            if ($dragging) {
-                $dragging.css({
-                    left: e.pageX - 50
+
+        if ('ontouchstart' in document.documentElement) {
+
+          $(document.body).on("touchstart", "#bucket", function (e) {
+              $dragging = $('#bucket');
+              if (!inGame) {
+                $('#directions').fadeOut('slow', function() {
+                  $('#scoreboard').animate({top: '10px'}, 2000);
+                  startGame();
                 });
-            }
-        });
+              }
+          });
 
-        $(document.body).on("touchmove", function(e) {
-            if ($dragging) {
-                $dragging.css({
-                    left: e.targetTouches[0].pageX - 50
+          $(document.body).on("touchmove", function(e) {
+              if ($dragging) {
+                  $dragging.css({
+                      left: e.targetTouches[0].pageX - 50
+                  });
+              }
+          });
+
+        } else {
+
+          $(document.body).on("mousedown", "#bucket", function (e) {
+              $dragging = ($dragging) ? null : $('#bucket');
+              if (!inGame) {
+                $('#directions').fadeOut('slow', function() {
+                  $('#scoreboard').animate({top: '10px'}, 2000);
+                  startGame();
                 });
-            }
-        });
+              }
+          });
 
-        $(document.body).on("mousedown", "#bucket", function (e) {
-            $dragging = ($dragging) ? null : $('#bucket');
-            if (!inGame) {
-              $('#directions').fadeOut('slow', function() {
-                $('#scoreboard').animate({top: '10px'}, 2000);
-                startGame();
-              });
-            }
-        });
+          $(document.body).on("mousemove", function(e) {
+              if ($dragging) {
+                  $dragging.css({
+                      left: e.pageX - 50
+                  });
+              }
+          });
 
-        $(document.body).on("touchstart", "#bucket", function (e) {
-            $dragging = $('#bucket');
-            if (!inGame) {
-              $('#directions').fadeOut('slow', function() {
-                $('#scoreboard').animate({top: '10px'}, 2000);
-                startGame();
-              });
-            }
-        });
+        }
 
         // $(document.body).on("mouseup", function (e) {
         //     if ($dragging) $dragging = null;
