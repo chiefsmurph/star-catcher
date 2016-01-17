@@ -166,6 +166,8 @@
     var inGame = false;
     var starStartY = -50;
 
+    var starX, starY, bucketPos;
+
     var dropStar = function(x) {
       var starEl = $('<img src="img/golden-star.svg.png" class="star">');
 
@@ -179,7 +181,7 @@
         starEl.addClass('fast-star');
       }
 
-      starEl.animate({top: height}, {
+      starEl.transition({top: height}, {
         easing: "linear",
         duration: duration,
         step: function(now, fx) {
@@ -187,10 +189,9 @@
 
 
           // check for bucket catch
-          var starX = $(this).position().left;
-          var starY = now;
-
-          var bucketPos = $('#bucket').position();
+          starX = $(this).position().left;
+          starY = now;
+          bucketPos = $('#bucket').position();
 
           if (starY > bucketPos.top - 10) {
             if (starX > bucketPos.left - 30 && starX < bucketPos.left + 100) {
@@ -223,27 +224,29 @@
         clearTimeout(timeouts[i]);
       }
 
-      $('body').append('<div id="fireworks"><h1></h1></div>');
-      $('#fireworks').fadeIn();
+      $('body').append('<div id="fireworks"><h1></h1></div>').hide().fadeIn();
       $('#bucket').hide();
 
-      $('#fireworks h1').text('Congratulations');
-      $('#fireworks h1').animate({fontSize: '1000px'}, 6000, 'easeInCubic', function() {
-        $('#fireworks h1').text('1000 Points!!!!!');
-        $('#fireworks h1').css('font-size', '1px');
-        $('#fireworks h1').animate({fontSize: '2000px'}, 6000, 'easeInCubic', function() {
-          setTimeout(function() {
-            $('#fireworks').fadeOut('slow', function() {
-              $('#bucket').show();
-              startGame();
-              $('#fireworks').remove();
-            });
-          }, 2000);
+      setTimeout(function() {
+
+        $('#fireworks h1').text('Congratulations');
+        $('#fireworks h1').transition({fontSize: '1000px'}, 6000, 'easeInCubic', function() {
+          $('#fireworks h1').text('1000 Points!!!!!');
+          $('#fireworks h1').css('font-size', '1px');
+          $('#fireworks h1').transition({fontSize: '2000px'}, 6000, 'easeInCubic', function() {
+            setTimeout(function() {
+              $('#fireworks').fadeOut('slow', function() {
+                $('#bucket').show();
+                startGame();
+                $('#fireworks').remove();
+              });
+            }, 2000);
+          });
         });
-      });
+
+      }, 1500);
 
     };
-
 
     var startGame = function() {
 
@@ -299,7 +302,7 @@
               $dragging = $('#bucket');
               if (!inGame) {
                 $('#directions').fadeOut('slow', function() {
-                  $('#scoreboard').animate({top: '10px'}, 2000);
+                  $('#scoreboard').transition({top: '10px'}, 2000);
                   startGame();
                 });
               }
@@ -319,7 +322,7 @@
               $dragging = ($dragging) ? null : $('#bucket');
               if (!inGame) {
                 $('#directions').fadeOut('slow', function() {
-                  $('#scoreboard').animate({top: '10px'}, 2000, function() {
+                  $('#scoreboard').transition({top: '10px'}, 2000, function() {
                     startGame();
                   });
                 });
