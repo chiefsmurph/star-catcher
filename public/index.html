@@ -130,11 +130,13 @@
       width: 200px;
       z-index: 10000;
       background-color: rgba(255,255,255,0.4);
-      border-radius: 10px;
       padding: 15px;
     }
     #scoreboard td {
       text-align: center;
+    }
+    #scoreboard td:nth-child(1) {
+      /*border-right: 1px dashed black;*/
     }
     #scoreboard td:nth-child(2) {
       border-left: 2px dashed black;
@@ -143,6 +145,12 @@
       font-size: 35px;
       margin-bottom: 5px;
       line-height: 1;
+    }
+    #scoreboard #starscaught {
+      color: green;
+    }
+    #scoreboard #starsfallen {
+      color: red;
     }
     </style>
 
