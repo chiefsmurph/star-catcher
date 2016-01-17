@@ -303,8 +303,18 @@
             }
         });
 
-        $(document.body).on("mousedown touchstart", "#bucket", function (e) {
+        $(document.body).on("mousedown", "#bucket", function (e) {
             $dragging = ($dragging) ? null : $('#bucket');
+            if (!inGame) {
+              $('#directions').fadeOut('slow', function() {
+                $('#scoreboard').animate({top: '10px'}, 2000);
+                startGame();
+              });
+            }
+        });
+
+        $(document.body).on("touchstart", "#bucket", function (e) {
+            $dragging = $('#bucket');
             if (!inGame) {
               $('#directions').fadeOut('slow', function() {
                 $('#scoreboard').animate({top: '10px'}, 2000);
