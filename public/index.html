@@ -212,6 +212,16 @@
     }
     </style>
 
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72547669-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script>
 
@@ -300,6 +310,7 @@
 
             if (starsFallen > 500) {
               endOfGame(function() {
+                ga('send', 'fail');
                 $('body').append('<h1 class="message">Fail.</h1>');
                 setTimeout(function() {
                   startGame();
@@ -343,6 +354,8 @@
     var gameWinner = function() {
 
       endOfGame(function() {
+
+        ga('send', 'winner');
 
         $('body').append('<div id="fireworks"><h1></h1></div>').hide().fadeIn();
 
@@ -417,6 +430,8 @@
 
     var startGame = function() {
 
+      ga('send', 'startgame');
+
       starsCaught = 0;
       starsFallen = 0;
       $('#starscaught').text(starsCaught);
@@ -435,6 +450,7 @@
       // got to end of level
       myTimeouts.push(new Timer(function() {
         endOfGame(function() {
+          ga('send', 'endlose');
           $('body').append('<h1 class="message">Better luck next time.</h1>');
           setTimeout(function() {
             startGame();
