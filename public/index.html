@@ -414,6 +414,17 @@
               }
           });
 
+          $(document.body).on("doubletap", function(e) {
+            if (inGame) {
+              if (gamePaused) {
+                resumeGame();
+              } else {
+                pauseGame();
+              }
+              gamePaused = !gamePaused;
+            }
+          });
+
         } else {
 
           $(document.body).on("mousedown", "#bucket", function (e) {
@@ -494,6 +505,7 @@
 
 
     <script src="js/velocity.min.js"></script>
+    <script src="js/jquery.doubletap.js"></script>
 
     <!-- GSAP -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/TweenLite.min.js"></script>
