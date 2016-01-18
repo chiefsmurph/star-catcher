@@ -25,6 +25,7 @@
       width: 100%;
       text-align: center;
       padding-top: 20%;
+      display: none;
     }
     #directions h1 {
       width: 40%;
@@ -42,8 +43,7 @@
       width: 140%;
       background-image: url('img/fireworks.gif');
       background-size: cover;
-      z-index: 0;
-      display: none;
+      z-index: 1;
     }
     #fireworks h1 {
       color: white;
@@ -60,6 +60,7 @@
       left: 0;
       height: 100%;
       width: 100%;
+      display: none;
     }
     .star {
       position: absolute;
@@ -156,6 +157,11 @@
     .img-preload {
       display: none;
     }
+    #loading {
+      width: 150px;
+      margin: 20% auto;
+      font-size: 5vh;
+    }
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -211,7 +217,7 @@
                   $(this).velocity('stop');
                   $(this).remove();
                   $('#starscaught').text(parseInt($('#starscaught').text()) + 1);
-                  if ($('#starscaught').text() === '1000') {
+                  if ($('#starscaught').text() === '7') {
                     gameWinner();
                   }
                 }
@@ -241,6 +247,7 @@
 
       $('body').append('<div id="fireworks"><h1></h1></div>').hide().fadeIn();
       $('#bucket').hide();
+      $('.star').remove();
 
       setTimeout(function() {
 
@@ -259,7 +266,7 @@
           });
         });
 
-      }, 1500);
+      }, 2500);
 
     };
 
@@ -355,6 +362,12 @@
 
         }
 
+        $(window).load(function() {
+         // executes when complete page is fully loaded, including all frames, objects and images
+         alert("window is loaded");
+         $('#gamearea, #directions').fadeIn('slow');
+        });
+
         // $(document.body).on("mouseup", function (e) {
         //     if ($dragging) $dragging = null;
         // });
@@ -365,6 +378,8 @@
 
   </head>
   <body>
+
+    <div id="loading">loading</div>
 
     <div id="gamearea">
 
