@@ -181,40 +181,45 @@
         starEl.addClass('fast-star');
       }
 
-      starEl.velocity({top: height}, {
-        easing: "linear",
-        duration: duration,
-        progress: function(elements, complete, remaining, start, tweenValue) {
+      setTimeout(function() {
+
+          starEl.velocity({top: height}, {
+            easing: "linear",
+            duration: duration,
+            progress: function(elements, complete, remaining, start, tweenValue) {
 
 
 
-          // check for bucket catch
-          starX = parseInt(elements[0].style.left);
-          starY = parseInt(elements[0].style.top);
+              // check for bucket catch
+              starX = parseInt(elements[0].style.left);
+              starY = parseInt(elements[0].style.top);
 
-          // console.log(starX, starY, bucketPos)
+              // console.log(starX, starY, bucketPos)
 
-          if (starY > height - 10 - 86 - 10) {
-            if (starX > bucketPos - 30 && starX < bucketPos + 100) {
+              if (starY > height - 10 - 86 - 10) {
+                if (starX > bucketPos - 30 && starX < bucketPos + 100) {
 
-              $(this).velocity('stop');
-              $(this).remove();
-              $('#starscaught').text(parseInt($('#starscaught').text()) + 1);
-              if ($('#starscaught').text() === '1000') {
-                gameWinner();
+                  $(this).velocity('stop');
+                  $(this).remove();
+                  $('#starscaught').text(parseInt($('#starscaught').text()) + 1);
+                  if ($('#starscaught').text() === '1000') {
+                    gameWinner();
+                  }
+                }
               }
+
+
+            },
+            complete: function() {
+              if (inGame) {
+                $('#starsfallen').text(parseInt($('#starsfallen').text()) + 1);
+              }
+              $(this).remove();
             }
-          }
+          });
 
+      }, 50);
 
-        },
-        complete: function() {
-          if (inGame) {
-            $('#starsfallen').text(parseInt($('#starsfallen').text()) + 1);
-          }
-          $(this).remove();
-        }
-      });
     }
 
     var gameWinner = function() {
