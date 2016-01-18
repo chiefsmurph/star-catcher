@@ -28,11 +28,11 @@
       display: none;
     }
     #directions h1 {
-      width: 40%;
+      width: 56%;
       margin: 0 auto;
       background-color: rgba(255,255,255,0.4);
       border-radius: 10px;
-      padding: 10px;
+      padding: 3vw 0vh;
       box-shadow: 10px 10px 5px rgba(0,0,0,0.5);
     }
     #fireworks {
@@ -68,45 +68,84 @@
       height: 50px;
       z-index: 2;
     }
-    .fast-star, .star-paused {
+    .fast-star {
        -webkit-animation-name: spin;
-       -webkit-animation-duration: 4000ms;
+       -webkit-animation-duration: 3000ms;
        -webkit-animation-iteration-count: infinite;
        -webkit-animation-timing-function: linear;
        -moz-animation-name: spin;
-       -moz-animation-duration: 4000ms;
+       -moz-animation-duration: 3000ms;
        -moz-animation-iteration-count: infinite;
        -moz-animation-timing-function: linear;
        -ms-animation-name: spin;
-       -ms-animation-duration: 4000ms;
+       -ms-animation-duration: 3000ms;
        -ms-animation-iteration-count: infinite;
        -ms-animation-timing-function: linear;
-
        animation-name: spin;
-       animation-duration: 4000ms;
+       animation-duration: 3000ms;
        animation-iteration-count: infinite;
        animation-timing-function: linear;
     }
     @-ms-keyframes spin {
-       from { -ms-transform: rotate(0deg); }
-       to { -ms-transform: rotate(-360deg); }
+       from { -ms-transform: rotate(-360deg); }
+       to { -ms-transform: rotate(0deg); }
     }
     @-moz-keyframes spin {
-       from { -moz-transform: rotate(0deg); }
-       to { -moz-transform: rotate(-360deg); }
+       from { -moz-transform: rotate(-360deg); }
+       to { -moz-transform: rotate(0deg); }
     }
     @-webkit-keyframes spin {
-       from { -webkit-transform: rotate(0deg); }
-       to { -webkit-transform: rotate(-360deg); }
+       from { -webkit-transform: rotate(-360deg); }
+       to { -webkit-transform: rotate(0deg); }
     }
     @keyframes spin {
+       from {
+           transform:rotate(-360deg);
+       }
+       to {
+           transform:rotate(0deg);
+       }
+    }
+
+    @keyframes paused-spin {
        from {
            transform:rotate(0deg);
        }
        to {
-           transform:rotate(360deg);
+           transform:rotate(-360deg);
        }
     }
+    @-ms-keyframes paused-spin {
+       from { -ms-transform: rotate(0deg); }
+       to { -ms-transform: rotate(-360deg); }
+    }
+    @-moz-keyframes paused-spin {
+       from { -moz-transform: rotate(0deg); }
+       to { -moz-transform: rotate(-360deg); }
+    }
+    @-webkit-keyframes paused-spin {
+       from { -webkit-transform: rotate(0deg); }
+       to { -webkit-transform: rotate(-360deg); }
+    }
+    .star-paused {
+      -webkit-animation-name: paused-spin;
+      -webkit-animation-duration: 4000ms;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+      -moz-animation-name: paused-spin;
+      -moz-animation-duration: 4000ms;
+      -moz-animation-iteration-count: infinite;
+      -moz-animation-timing-function: linear;
+      -ms-animation-name: paused-spin;
+      -ms-animation-duration: 4000ms;
+      -ms-animation-iteration-count: infinite;
+      -ms-animation-timing-function: linear;
+      animation-name: paused-spin;
+      animation-duration: 4000ms;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
 
     #bucket * {
       position: absolute;
@@ -217,10 +256,10 @@
       $('#bucket #bottom').css('left', x + 'px');
     };
 
-    var animateStar = function(starEl) {
+    var animateStar = function(starEl, forceDuration) {
       starEl.velocity({top: height}, {
         easing: "linear",
-        duration: starEl.data('duration'),
+        duration: forceDuration || starEl.data('duration'),
         progress: function(elements, complete, remaining, start, tweenValue) {
 
 
@@ -334,7 +373,8 @@
     var resumeGame = function() {
       console.log('resumeing')
       $('.star').each(function() {
-        animateStar($(this));
+        var newDuration = (height - $(this).position().top) / height * $(this).data('duration');
+        animateStar($(this), newDuration);
         $(this).removeClass('star-paused');
       });
       for (var i = 0; i < myTimeouts.length; i++) {
