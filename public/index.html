@@ -321,8 +321,9 @@
               $dragging = $('#bucket');
               if (!inGame) {
                 $('#directions').fadeOut('slow', function() {
-                  $('#scoreboard').velocity({top: '10px'}, 2000);
-                  startGame();
+                  $('#scoreboard').animate({top: '10px'}, 2000, function() {
+                    startGame();
+                  });
                 });
               }
           });
