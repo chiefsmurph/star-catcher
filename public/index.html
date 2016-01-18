@@ -161,6 +161,7 @@
       width: 150px;
       margin: 20% auto;
       font-size: 5vh;
+      text-align: center;
     }
     </style>
 
@@ -364,8 +365,8 @@
 
         $(window).load(function() {
          // executes when complete page is fully loaded, including all frames, objects and images
-         alert("window is loaded");
          $('#gamearea, #directions').fadeIn('slow');
+         $('#loading').remove();
         });
 
         // $(document.body).on("mouseup", function (e) {
