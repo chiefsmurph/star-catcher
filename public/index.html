@@ -181,22 +181,23 @@
         starEl.addClass('fast-star');
       }
 
-      starEl.transition({top: height}, {
+      starEl.velocity({top: height}, {
         easing: "linear",
         duration: duration,
-        step: function(now, fx) {
-          //console.log(fx.elem.id + " " + fx.prop + ": " + now);
+        progress: function(elements, complete, remaining, start, tweenValue) {
+
 
 
           // check for bucket catch
-          starX = $(this).position().left;
-          starY = now;
-          bucketPos = $('#bucket').position();
+          starX = parseInt(elements[0].style.left);
+          starY = parseInt(elements[0].style.top);
 
-          if (starY > bucketPos.top - 10) {
-            if (starX > bucketPos.left - 30 && starX < bucketPos.left + 100) {
+          // console.log(starX, starY, bucketPos)
 
-              $(this).stop();
+          if (starY > height - 10 - 86 - 10) {
+            if (starX > bucketPos - 30 && starX < bucketPos + 100) {
+
+              $(this).velocity('stop');
               $(this).remove();
               $('#starscaught').text(parseInt($('#starscaught').text()) + 1);
               if ($('#starscaught').text() === '1000') {
@@ -230,10 +231,10 @@
       setTimeout(function() {
 
         $('#fireworks h1').text('Congratulations');
-        $('#fireworks h1').transition({fontSize: '1000px'}, 6000, 'easeInCubic', function() {
+        $('#fireworks h1').velocity({fontSize: '1000px'}, 6000, 'easeInCubic', function() {
           $('#fireworks h1').text('1000 Points!!!!!');
           $('#fireworks h1').css('font-size', '1px');
-          $('#fireworks h1').transition({fontSize: '2000px'}, 6000, 'easeInCubic', function() {
+          $('#fireworks h1').velocity({fontSize: '2000px'}, 6000, 'easeInCubic', function() {
             setTimeout(function() {
               $('#fireworks').fadeOut('slow', function() {
                 $('#bucket').show();
@@ -302,7 +303,7 @@
               $dragging = $('#bucket');
               if (!inGame) {
                 $('#directions').fadeOut('slow', function() {
-                  $('#scoreboard').transition({top: '10px'}, 2000);
+                  $('#scoreboard').velocity({top: '10px'}, 2000);
                   startGame();
                 });
               }
@@ -311,8 +312,11 @@
           $(document.body).on("touchmove", function(e) {
               if ($dragging) {
                   $dragging.css({
-                      left: e.originalEvent.touches[0].pageX- 50
+                      left: e.originalEvent.touches[0].pageX-50
                   });
+                  console.log('b4' + bucketPos);
+                  bucketPos = e.originalEvent.touches[0].pageX-50;
+                  console.log('af' + bucketPos);
               }
           });
 
@@ -322,7 +326,7 @@
               $dragging = ($dragging) ? null : $('#bucket');
               if (!inGame) {
                 $('#directions').fadeOut('slow', function() {
-                  $('#scoreboard').transition({top: '10px'}, 2000, function() {
+                  $('#scoreboard').velocity({top: '10px'}, 2000, function() {
                     startGame();
                   });
                 });
@@ -334,6 +338,9 @@
                   $dragging.css({
                       left: e.pageX - 50
                   });
+                  console.log('b4' + bucketPos);
+                  bucketPos = e.pageX-50;
+                  console.log('af' + bucketPos);
               }
           });
 
@@ -378,7 +385,7 @@
 
 
 
-    <script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
+    <script src="js/velocity.min.js"></script>
 
     <!-- GSAP -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/TweenLite.min.js"></script>
