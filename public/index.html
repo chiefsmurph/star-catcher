@@ -298,12 +298,12 @@
             starsFallen++;
             $('#starsfallen').text(starsFallen);
 
-            if (starsFallen > 400) {
+            if (starsFallen > 500) {
               endOfGame(function() {
                 $('body').append('<h1 class="message">Fail.</h1>');
                 setTimeout(function() {
                   startGame();
-                }, 5000);
+                }, 7000);
               });
             }
           }
