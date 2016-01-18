@@ -169,7 +169,7 @@
     var starStartY = -50;
 
     var starX, starY, bucketPos;
-    var imgPreloads = ['img/fireworks.gif', 'img/golden-star.svg.png'];
+    var imgPreloads = ['img/fireworks.gif', 'img/golden-star-sml.png'];
 
     var moveBucket = function(x) {
       bucketPos = x;
@@ -178,7 +178,7 @@
     };
 
     var dropStar = function(x) {
-      var starEl = $('<img src="img/golden-star.svg.png" class="star">');
+      var starEl = $('<img src="img/golden-star-sml.png" class="star">');
 
       x = (x) ? width * x / 100 : Math.round(Math.random() * (width-50) );
       starEl.css('left', x + 'px' );
