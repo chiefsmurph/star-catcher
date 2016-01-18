@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Star Catcher</title>
+    <title>Check Star Catcher</title>
     <meta name="viewport" content="width=device-width, initial-scale=0.8, minimum-scale=0.8, maximum-scale=0.8, user-scalable=no"/>
     <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
     <style>
@@ -59,13 +59,13 @@
       top: 0;
       left: 0;
       height: 100%;
-      width: 140%;
+      width: 100%;
     }
     .star {
       position: absolute;
       width: 50px;
       height: 50px;
-
+      z-index: 2;
     }
     .fast-star {
        -webkit-animation-name: spin;
@@ -107,11 +107,12 @@
        }
     }
 
-    #bucket {
+    #bucket * {
       position: absolute;
       bottom: 10px;
       left: 10px;
       cursor: pointer;
+      margin: 0;
     }
     #bucket img {
       width: 100px;
@@ -121,14 +122,12 @@
       z-index: 1;
     }
     #bucket #bottom {
-      position: relative;
-      left: -104px;
-      z-index: 2;
+      z-index: 3;
     }
     #scoreboard {
       position: absolute;
       top: -200px;
-      right: 30%;
+      right: 10px;
       width: 200px;
       z-index: 10000;
       background-color: rgba(255,255,255,0.4);
@@ -167,6 +166,12 @@
     var starStartY = -50;
 
     var starX, starY, bucketPos;
+
+    var moveBucket = function(x) {
+      bucketPos = x;
+      $('#bucket #top').css('left', x + 'px');
+      $('#bucket #bottom').css('left', x + 'px');
+    };
 
     var dropStar = function(x) {
       var starEl = $('<img src="img/golden-star.svg.png" class="star">');
@@ -218,7 +223,7 @@
             }
           });
 
-      }, 50);
+      }, 250);
 
     }
 
@@ -316,19 +321,14 @@
 
           $(document.body).on("touchmove", function(e) {
               if ($dragging) {
-                  $dragging.css({
-                      left: e.originalEvent.touches[0].pageX-50
-                  });
-                  console.log('b4' + bucketPos);
-                  bucketPos = e.originalEvent.touches[0].pageX-50;
-                  console.log('af' + bucketPos);
+                moveBucket(e.originalEvent.touches[0].pageX-50);
               }
           });
 
         } else {
 
           $(document.body).on("mousedown", "#bucket", function (e) {
-              $dragging = ($dragging) ? null : $('#bucket');
+              $dragging = ($dragging) ? null : true;
               if (!inGame) {
                 $('#directions').fadeOut('slow', function() {
                   $('#scoreboard').velocity({top: '10px'}, 2000, function() {
@@ -340,12 +340,7 @@
 
           $(document.body).on("mousemove", function(e) {
               if ($dragging) {
-                  $dragging.css({
-                      left: e.pageX - 50
-                  });
-                  console.log('b4' + bucketPos);
-                  bucketPos = e.pageX-50;
-                  console.log('af' + bucketPos);
+                  moveBucket(e.pageX-50);
               }
           });
 
