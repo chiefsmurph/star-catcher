@@ -274,9 +274,11 @@
         starEl.data('duration', duration);
 
         setTimeout(function() {
-
+          if (!gamePaused) {
             animateStar(starEl);
-
+          } else {
+            starEl.remove();
+          }
         }, 250);
       }
 
