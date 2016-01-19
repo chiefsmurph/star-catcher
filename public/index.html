@@ -210,7 +210,7 @@
       z-index: 1;
     }
     #bucket #bottom {
-      z-index: 3;
+      z-index: 5;
     }
     #scoreboard {
       position: absolute;
@@ -258,6 +258,16 @@
       text-align: center;
       z-index: 3;
     }
+
+    canvas#starcanvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      /*background-color: rgba(255,255,255,0.6);*/
+      z-index: 4;
+
+    }
     </style>
 
     <script>
@@ -290,6 +300,10 @@
     var starsCaught;
 
     var mySocket;
+    var canvas;
+    var ctx;
+
+    var displayingStars = [];
 
     function Timer(fn, countdown) {
         var ident, complete = false;
@@ -376,27 +390,33 @@
 
     var dropStar = function(x) {
       if (inGame && !gamePaused) {
-        var starEl = $('<img src="img/golden-star-sml.png" class="star">');
-
+        // var starEl = $('<img src="img/golden-star-sml.png" class="star">');
+        //
         x = (x) ? width * x / 100 : Math.round(Math.random() * (width-50) );
-        starEl.css('left', x + 'px' );
-        starEl.css('top', starStartY + 'px');
-        $('#gamearea').append(starEl);
+        // starEl.css('left', x + 'px' );
+        // starEl.css('top', starStartY + 'px');
+        // $('#gamearea').append(starEl);
 
         var duration = 1000 + Math.round(Math.random() * 2000);
-        if (duration < 1500) {
-          starEl.addClass('fast-star');
-        }
+        // if (duration < 1500) {
+        //   starEl.addClass('fast-star');
+        // }
+        //
+        // starEl.data('duration', duration);
+        //
+        // setTimeout(function() {
+        //   if (!gamePaused) {
+        //     animateStar(starEl);
+        //   } else {
+        //     starEl.remove();
+        //   }
+        // }, 250);
 
-        starEl.data('duration', duration);
-
-        setTimeout(function() {
-          if (!gamePaused) {
-            animateStar(starEl);
-          } else {
-            starEl.remove();
-          }
-        }, 250);
+        displayingStars.push({
+          x: x,
+          y: -50,
+          dur: duration
+        });
       }
 
     }
@@ -489,6 +509,8 @@
       $('#bucket').show();
       $('.message').remove();
 
+      displayingStars = [];
+
       // handle levelData
       levelData.forEach(function(star, index) {
         myTimeouts.push(new Timer(function() {
@@ -512,19 +534,112 @@
     };
 
     var screenSaverStars = function() {
-      
+      var sendAnother = function() {
+        setTimeout()
+      }
     };
 
     $(function() {
 
-      height = $(window).height();
-      width = $(window).width();
+      canvas = document.getElementById('starcanvas');
+      ctx = canvas.getContext('2d')
+      resizeEverything();
 
     });
 
-    $(window).resize(function() {
+    var starImg = new Image();
+    starImg.src = "img/golden-star-50.png";
+
+    var now, dt,
+        last = new Date().getTime();
+
+    var canvasStar = 0;
+    var starDur = 2000;
+
+    var update = function(dt) {
+      if (inGame && !gamePaused) {
+        displayingStars.forEach(function(star, ind) {
+          star.y += (height * dt) / star.dur;
+
+          // check for bucket catch
+          starX = star.x;
+          starY = star.y;
+
+          // bucket collision test
+          if (starY > height - 10 - 86 - 10 && starY < height - 86) {
+            if (starX > bucketPos - 30 && starX < bucketPos + 100) {
+
+              displayingStars.splice(ind, 1);
+              starsCaught++;
+              $('#starscaught').text(starsCaught);;
+              if (starsCaught === 1000) {
+                gameWinner();
+              }
+            }
+          }
+
+          // is it a miss?
+          if (star.y > height) {
+            starsFallen++;
+            $('#starsfallen').text(starsFallen);
+
+            if (starsFallen > 500) {
+              endOfGame(function() {
+                ga('send', 'fail');
+                $('body').append('<h1 class="message">Fail.</h1>');
+                setTimeout(function() {
+                  startGame();
+                }, 7000);
+              });
+            }
+            displayingStars.splice(ind, 1);
+          }
+
+
+        });
+
+      }
+
+
+
+    };
+    var render = function(dt) {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      displayingStars.forEach(function(star) {
+        ctx.drawImage(starImg,star.x,star.y);
+      });
+
+    };
+
+
+    function frame() {
+      now   = new Date().getTime();
+      dt    = now - last;    // duration in seconds
+      update(dt);
+      render(dt);
+      last = now;
+      requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+
+    var canvasDrop = function() {
+
+    };
+
+    var resizeEverything = function() {
       height = $(window).height();
       width = $(window).width();
+      canvas.width = width;
+      canvas.height = height;
+
+      canvasDrop();
+
+    };
+
+    $(window).resize(function() {
+      resizeEverything();
     });
 
 
@@ -628,6 +743,7 @@
         $('img').on('dragstart', function(event) { event.preventDefault(); });
 
         mySocket = io();
+
     });
     </script>
 
@@ -677,6 +793,8 @@
     <div id="directions">
       <h1></h1>
     </div>
+
+    <canvas id="starcanvas"></canvas>
 
   </body>
 </html>
