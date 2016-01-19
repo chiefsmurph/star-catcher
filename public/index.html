@@ -420,9 +420,9 @@
       // bucketTop.css("left", x + 'px');
       // bucketBottom.css("left", x + 'px');
       bucketTop.velocity("stop");
-      bucketTop.velocity({left: x+ 'px'}, 50);
+      bucketTop.velocity({left: x+ 'px'}, 5);
       bucketBottom.velocity("stop");
-      bucketBottom.velocity({left: x+ 'px'}, 50);
+      bucketBottom.velocity({left: x+ 'px'}, 5);
     };
 
     var showHighScores = function() {
@@ -704,9 +704,9 @@
           });
 
           $(document.body).on("touchmove", function(e) {
-              if ($dragging && mouseCount % 3 === 0) {
+              // if ($dragging && mouseCount % 1 === 0) {
                 moveBucket(e.originalEvent.touches[0].pageX-50);
-              }
+              // }
               mouseCount++;
           });
 
