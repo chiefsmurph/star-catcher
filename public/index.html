@@ -467,12 +467,12 @@
               //   });
               // }
 
-              if (starsFallen == 5) {
+              if (starsFallen == 10) {
                 endOfGame(function() {
 
                   if (starsCaught > userObj.starsCaught) {
                     // mess, fadespeed, delay, displaylength, cb)
-                    displayMessage('congrats - new personal best!<br>' + starsCaught + ' stars caught before 50 misses!', 'slow', 20, 3000, function() {
+                    displayMessage('congrats - new personal best!<br>' + starsCaught + ' stars caught before 10 misses!', 'slow', 20, 3000, function() {
                       showHighScores();
                     });
                     mySocket.emit('sendScore', {
@@ -481,7 +481,7 @@
                       starsCaught: starsCaught
                     });
                   } else {
-                    displayMessage('stars caught before 50 misses...' + starsCaught, 'slow', 20, 3000, function() {
+                    displayMessage('stars caught before 10 misses...' + starsCaught, 'slow', 20, 3000, function() {
                       showHighScores();
                     });
                   }
@@ -507,7 +507,7 @@
         starEl.css('top', starStartY + 'px');
         $('#gamearea').append(starEl);
 
-        var duration = 1000 + Math.round(Math.random() * 2000) - starsCaught*3;
+        var duration = 1600 + Math.round(Math.random() * 2000) - starsCaught*3.5;
         if (duration < 1500) {
           starEl.addClass('fast-star');
         }
@@ -871,7 +871,7 @@
 
             setTimeout(function() {
               $('#directions').fadeOut('slow', function() {
-                displayMessage('the goal is to catch as many stars as possible before you miss 50', 'fast', 700, 1800, function() {
+                displayMessage('the goal is to catch as many stars as possible before you miss 10', 'fast', 700, 1800, function() {
 
                   displayMessage(engagement + ' the bucket to start', 'slow', 500);
                   setTimeout(function() {
