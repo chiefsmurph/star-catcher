@@ -54,6 +54,7 @@ var verifyUser = function(userObj, cb) {
 io.on('connection', function(socket) {
 
   var startTime;
+  var username;
 
   console.log('connection');
 
@@ -103,13 +104,15 @@ io.on('connection', function(socket) {
           res: 'bad',
           msg: 'username already taken'
         });
-      } else {
+      } else if (!username) {
 
         var handshake = uuid.v1();
 
         pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
           var queryText = 'INSERT INTO players (username, dateset, starscaught, handshake) VALUES($1, $2, $3, $4)';
           client.query(queryText, [data.username, 'today', 0, handshake], function(err, result) {
+
+            username = data.username;
 
             if (err)  console.error(err);
 
