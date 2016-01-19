@@ -859,12 +859,15 @@
 
             $('#personal_best').text('0');
 
-            addBucket();
 
             setTimeout(function() {
               $('#directions').fadeOut('slow', function() {
                 displayMessage('the goal is to catch as many stars as possible before you miss 50', 'fast', 700, 1800, function() {
+
                   displayMessage(engagement + ' the bucket to start', 'slow', 500);
+                  setTimeout(function() {
+                    addBucket();
+                  }, 500);
                 });
 
               });
