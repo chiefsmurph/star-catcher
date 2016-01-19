@@ -382,6 +382,7 @@
     var userObj;
 
     var needtoshowhs = false;
+    var $bucketTop, $bucketBottom;
 
     function Timer(fn, countdown) {
         var ident, complete = false;
@@ -412,8 +413,8 @@
 
     var moveBucket = function(x) {
       bucketPos = x;
-      $('#bucket #top').css('left', x + 'px');
-      $('#bucket #bottom').css('left', x + 'px');
+      $bucketTop.css('left', x + 'px');
+      $bucketBottom.css('left', x + 'px');
     };
 
     var showHighScores = function() {
@@ -579,7 +580,7 @@
 
       if (inGame) {
         $('#scoreboard').animate({top: '-200px'}, 2000);
-        
+
         inGame = false;
 
         for (var i=0; i<myTimeouts.length; i++) {
@@ -663,6 +664,9 @@
 
 
     $(document).ready(function() {
+
+        $bucketTop = $('#bucket #top');
+        $bucketBottom = $('#bucket #bottom');
 
         imgPreloads.forEach(function(imgUrl) {
           $('body').append('<img src="' + imgUrl + '" class="img-preload">');
