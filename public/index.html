@@ -350,7 +350,7 @@
       z-index: 10;
     }
     .mobilehstd {
-      padding: 1px 10px !important;
+      padding: 3px 10px !important;
     }
     </style>
 
@@ -598,6 +598,7 @@
           $('#bucket').hide();
           $('.star').each(function() {
             $(this).remove();
+            nocounts.push($(this).data('duration'));
           });
 
           cb();
