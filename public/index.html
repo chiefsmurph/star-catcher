@@ -219,10 +219,14 @@
       width: 200px;
       z-index: 1;
       background-color: rgba(255,255,255,0.4);
-      padding: 15px;
+      padding: 5px;
+    }
+    #scoreboard table {
+      border-spacing: 10px;
     }
     #scoreboard td {
       text-align: center;
+      padding-bottom: 8px;
     }
     #scoreboard td:nth-child(1) {
       /*border-right: 1px dashed black;*/
@@ -240,6 +244,11 @@
     }
     #scoreboard #starsfallen {
       color: red;
+    }
+    #scoreboard tr:nth-child(2) td {
+      font-size: 90%;
+      background-color: rgba(255,255,255,0.6);
+      padding-top: 4px;
     }
     .img-preload {
       display: none;
@@ -293,6 +302,48 @@
       color: red;
       background-color: rgba(255,255,255,0.6)
     }
+    #hs {
+      display: none;
+      width: 80%;
+      height: 80%;
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      background-color: rgba(255,255,255,0.1);
+    }
+    #hs table {
+      width: 98%;
+      margin: 0 auto;
+    }
+    #hs thead {
+      background-color: rgba(255,255,255,0.7);
+      font-size: 6vh;
+    }
+    #hs table th {
+      text-align: left;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    #hs table td, #hs table th {
+      padding: 10px;
+    }
+    #hs table td {
+      font-size: 3vh;
+    }
+    #hs table tr td.me {
+      background-color: rgba(255,215,0,0.5);
+    }
+    #hs-mess {
+      text-align: center;
+      margin: 10px;
+    }
+    #usr {
+      font-size: 150%;
+      letter-spacing: 2px;
+    }
+    hr {
+      border: 1px dashed rgba(0,0,0,0.5)
+    }
     </style>
 
     <script>
@@ -325,6 +376,9 @@
     var starsCaught;
 
     var mySocket;
+    var userObj;
+
+    var needtoshowhs = false;
 
     function Timer(fn, countdown) {
         var ident, complete = false;
@@ -359,6 +413,11 @@
       $('#bucket #bottom').css('left', x + 'px');
     };
 
+    var showHighScores = function() {
+      mySocket.emit('getHS');
+      needtoshowhs = true;
+    };
+
     var animateStar = function(starEl, forceDuration) {
       starEl.velocity({top: height}, {
         easing: "linear",
@@ -391,13 +450,35 @@
             starsFallen++;
             $('#starsfallen').text(starsFallen);
 
-            if (starsFallen > 500) {
+
+            // if (starsFallen > 500) {
+            //   endOfGame(function() {
+            //     ga('send', 'fail');
+            //     $('body').append('<h1 class="message">Fail.</h1>');
+            //     setTimeout(function() {
+            //       startGame();
+            //     }, 7000);
+            //   });
+            // }
+
+            if (starsFallen == 5) {
               endOfGame(function() {
-                ga('send', 'fail');
-                $('body').append('<h1 class="message">Fail.</h1>');
-                setTimeout(function() {
-                  startGame();
-                }, 7000);
+
+                if (starsCaught > userObj.starsCaught) {
+                  // mess, fadespeed, delay, displaylength, cb)
+                  displayMessage('congratulations - new personal best!<br>' + starsCaught + ' stars caught before 50 misses!', 'slow', 20, 3000, function() {
+                    showHighScores();
+                  });
+                  mySocket.emit('sendScore', {
+                    username: userObj.username,
+                    handshake: userObj.handshake,
+                    starsCaught: starsCaught
+                  });
+                } else {
+                  displayMessage('stars caught before 50 misses...' + starsCaught, 'slow', 20, 3000, function() {
+                    showHighScores();
+                  });
+                }
               });
             }
           }
@@ -514,6 +595,8 @@
     var startGame = function() {
 
       ga('send', 'startgame');
+      mySocket.emit('startgame');
+      $('#hs').fadeOut();
 
       starsCaught = 0;
       starsFallen = 0;
@@ -597,6 +680,7 @@
           $(document.body).on("touchstart", "#bucket", function (e) {
               $dragging = $('#bucket');
               if (!inGame) {
+                $('#hs').fadeOut();
                 $('#directions').fadeOut('slow', function() {
                   $('#scoreboard').animate({top: '10px'}, 2000, function() {
                     startGame();
@@ -626,6 +710,7 @@
           $(document.body).on("mousedown", "#bucket", function (e) {
               $dragging = ($dragging) ? null : true;
               if (!inGame) {
+                $('#hs').fadeOut();
                 $('#directions').fadeOut('slow', function() {
                   $('#scoreboard').velocity({top: '10px'}, 2000, function() {
                     startGame();
@@ -652,11 +737,19 @@
 
         }
 
+        $('#hs-mess').text(engagement + ' the bucket to play again');
+
         $(window).load(function() {
          // executes when complete page is fully loaded, including all frames, objects and images
          $('#gamearea').fadeIn('slow', function() {
-           if (docCookies.hasItem('user')) {
-             displayMessage('welcome to Star Catcher<br>' + engagement + ' the bucket to start', 'slow', 200, 2600);
+           if (docCookies.hasItem('userStatus')) {
+
+             userObj = JSON.parse(docCookies.getItem('userStatus'));
+             mySocket.emit('verifyLogin', userObj);
+             console.log('verify', userObj);
+
+             $('#personal_best').text(userObj.starsCaught);
+
            } else {
              displayMessage('welcome to Star Catcher', 'slow', 200, 2000, function() {
                setTimeout(function() {
@@ -665,6 +758,7 @@
                displayMessage('<table><tr><td colspan=2><h1>create a username</h1></td></tr><tr><td><input type="text" id="username"></td><td><button id="createuser" type="submit">submit</button></td></tr><tr><td colspan=2 id="username-response"></td></tr></table>', 'fast', 1500);
              });
            }
+           mySocket.emit('getHS');
          });
 
          $('#loading').remove();
@@ -704,9 +798,97 @@
           $('#username-response').removeClass('good bad');
           $('#username-response').addClass(data.res);
           $('#username-response').text('response: ' + data.msg);
-          
+
+          if (data.res === 'good') {
+
+            docCookies.setItem('userStatus', JSON.stringify({
+      				username: $('#username').val(),
+      				starsCaught: '0',
+      				handshake: data.handshake
+      			}), 31536e3, "/");
+
+            userObj = {
+      				username: $('#username').val(),
+      				starsCaught: '0',
+      				handshake: data.handshake
+      			};
+
+            $('#personal_best').text('0');
+
+            addBucket();
+
+            setTimeout(function() {
+              $('#directions').fadeOut('slow', function() {
+                displayMessage('the goal is to catch as many stars as possible before you miss 50', 'fast', 700, 1800, function() {
+                  displayMessage(engagement + ' the bucket to start', 'slow', 500);
+                });
+
+              });
+            }, 1000);
+
+          }
+
         });
+
+        mySocket.on('login-feedback', function(data) {
+
+          if (data.res) {
+            displayMessage('welcome back to Star Catcher, <span id="usr">' + userObj.username + '</span><hr>' + engagement + ' the bucket to start', 'slow', 200);
+            addBucket();
+          } else {
+            displayMessage('hackzor');
+          }
+
+        });
+
+        mySocket.on('hsSuccess', function(data) {
+          userObj.starsCaught = data.starsCaught;
+          userObj.handshake = data.handshake;
+          docCookies.setItem('userStatus', JSON.stringify({
+            username: userObj.username,
+            starsCaught: data.starsCaught,
+            handshake: data.handshake
+          }), 31536e3, "/");
+          mySocket.emit('');
+          $('#personal_best').text(data.starsCaught);
+        });
+
+        mySocket.on('hs', function(data) {
+          console.log(JSON.stringify(data.scores));
+          $('#hs table tbody').empty();
+
+          for (var i = 0; i < 10; i++) {
+            $('#hs table tbody').append('<tr><td></td><td></td><td></td><td></td></tr>');
+          }
+
+          data.scores.forEach(function(score, i) {
+            $('#hs table tbody tr').eq(i).html([i+1, score.username, score.dateset, score.starscaught].map(function(what) {
+              return "<td>" + what + "</td>";
+            }));
+            if (score.username === userObj.username) {
+              $('#hs table tbody tr').eq(i).children().addClass('me');
+            }
+          });
+
+
+          if (needtoshowhs) {
+            $('#hs').fadeIn();
+            needtoshowhs = false;
+            setTimeout(function() {
+              moveBucket(10);
+              $dragging = null;
+              $('#bucket').show();
+            }, 1200);
+          }
+
+
+        })
+
     });
+
+    var addBucket = function() {
+      $('#gamearea').append('<div id="bucket"><img src="img/topbucket.png" id="top"><img src="img/bottombucket.png" id="bottom"></div>');
+    }
     </script>
 
   </head>
@@ -728,12 +910,12 @@
               stars fallen
             </td>
           </tr>
+          <tr>
+            <td colspan="2">personal best: <span id="personal_best"></span></td>
+          </tr>
         </table>
       </div>
-      <div id="bucket">
-        <img src="img/topbucket.png" id="top">
-        <img src="img/bottombucket.png" id="bottom">
-      </div>
+
     </div>
 
     <!-- <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script> -->
@@ -755,6 +937,20 @@
 
     <div id="directions">
       <h1></h1>
+    </div>
+
+    <div id="hs">
+      <div id="hs-mess"></div>
+      <table>
+        <thead>
+          <th>rank</th>
+          <th>name</th>
+          <th>date</th>
+          <th>score</th>
+        </thead>
+        <tbody>
+        </tbody
+      </table>
     </div>
 
   </body>
