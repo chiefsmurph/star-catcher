@@ -401,6 +401,8 @@
     var bucketTop, bucketBottom;
     var mouseCount = 0;
 
+    var nocounts = [];
+
     function Timer(fn, countdown) {
         var ident, complete = false;
 
@@ -449,40 +451,46 @@
         duration: forceDuration || starEl.data('duration'),
         complete: function() {
           if (inGame) {
-            starsFallen++;
-            $('#starsfallen').text(starsFallen);
+            var index = nocounts.indexOf($(this).data('duration'));
+            if (index == -1) {
+              starsFallen++;
+              $('#starsfallen').text(starsFallen);
 
 
-            // if (starsFallen > 500) {
-            //   endOfGame(function() {
-            //     ga('send', 'fail');
-            //     $('body').append('<h1 class="message">Fail.</h1>');
-            //     setTimeout(function() {
-            //       startGame();
-            //     }, 7000);
-            //   });
-            // }
+              // if (starsFallen > 500) {
+              //   endOfGame(function() {
+              //     ga('send', 'fail');
+              //     $('body').append('<h1 class="message">Fail.</h1>');
+              //     setTimeout(function() {
+              //       startGame();
+              //     }, 7000);
+              //   });
+              // }
 
-            if (starsFallen == 5) {
-              endOfGame(function() {
+              if (starsFallen == 5) {
+                endOfGame(function() {
 
-                if (starsCaught > userObj.starsCaught) {
-                  // mess, fadespeed, delay, displaylength, cb)
-                  displayMessage('congrats - new personal best!<br>' + starsCaught + ' stars caught before 50 misses!', 'slow', 20, 3000, function() {
-                    showHighScores();
-                  });
-                  mySocket.emit('sendScore', {
-                    username: userObj.username,
-                    handshake: userObj.handshake,
-                    starsCaught: starsCaught
-                  });
-                } else {
-                  displayMessage('stars caught before 50 misses...' + starsCaught, 'slow', 20, 3000, function() {
-                    showHighScores();
-                  });
-                }
-              });
+                  if (starsCaught > userObj.starsCaught) {
+                    // mess, fadespeed, delay, displaylength, cb)
+                    displayMessage('congrats - new personal best!<br>' + starsCaught + ' stars caught before 50 misses!', 'slow', 20, 3000, function() {
+                      showHighScores();
+                    });
+                    mySocket.emit('sendScore', {
+                      username: userObj.username,
+                      handshake: userObj.handshake,
+                      starsCaught: starsCaught
+                    });
+                  } else {
+                    displayMessage('stars caught before 50 misses...' + starsCaught, 'slow', 20, 3000, function() {
+                      showHighScores();
+                    });
+                  }
+                });
+              }
+            } else {
+              nocounts.splice(index, 1);
             }
+
           }
           starEl.remove();
         }
@@ -551,6 +559,7 @@
       $('.star').each(function() {
         $(this).stop();
         $(this).addClass('star-paused');
+        nocounts.push($(this).data('duration'));
       });
       for (var i = 0; i < myTimeouts.length; i++) {
         console.log('pausing');
@@ -750,12 +759,10 @@
 
         var checkForCollisions = function() {
 
-          console.log('cehck')
 
             $('.star').each(function() {
               starX = $(this).position().left;
               starY = $(this).position().top;
-              console.log(starX);
               // check for bucket catch
 
               // console.log(starX, starY, bucketPos)
@@ -763,8 +770,11 @@
               if (starY > height - 10 - 86 - 10 && starY < height - 86) {
                 if (starX > bucketPos - 30 && starX < bucketPos + 100) {
 
+                  nocounts.push($(this).data('duration'));
+
                   $(this).stop();
                   $(this).remove();
+                  console.log(nocounts);
                   starsCaught++;
                   $('#starscaught').text(starsCaught);;
                   if (starsCaught === 1000) {
