@@ -847,7 +847,6 @@
           mySocket.emit('usernameSubmit', {
             username: $('#username').val()
           });
-          $(this).prop("disabled",true);
         });
 
         $(document).on('keypress', '#username', function(event) {
@@ -872,6 +871,8 @@
           $('#username-response').text('response: ' + data.msg);
 
           if (data.res === 'good') {
+
+            $('#createuser').prop("disabled",true);
 
             docCookies.setItem('userStatus', JSON.stringify({
       				username: $('#username').val(),
