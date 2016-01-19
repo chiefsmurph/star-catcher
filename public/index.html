@@ -75,12 +75,12 @@
       padding-top: 12%;
       display: none;
     }
-    #directions h1 {
+    #directions > h1 {
       width: 50%;
       margin: 0 auto;
       background-color: rgba(255,255,255,0.4);
       border-radius: 10px;
-      padding: 3vw 1vh;
+      padding: 2vw 1vh;
       box-shadow: 10px 10px 5px rgba(0,0,0,0.5);
     }
     #fireworks {
@@ -258,6 +258,41 @@
       text-align: center;
       z-index: 3;
     }
+    #directions table {
+      width: 80%;
+      margin: 0 auto;
+    }
+    #username {
+      border: 1px solid black;
+      font-size: 20px;
+      padding: 5px;
+      text-align: center;
+      width: 100%;
+      margin-bottom: 10px;
+      cursor: text;
+    }
+    #createuser {
+      font-size: 20px;
+      padding: 5px;
+      border: 1px solid black;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    #createuser:active {
+      background-color: yellow;
+    }
+    #username-response {
+      height: 35px;
+      padding: 4px 10px;
+    }
+    #username-response.good {
+      color: green;
+      background-color: rgba(255,255,255,0.6)
+    }
+    #username-response.bad {
+      color: red;
+      background-color: rgba(255,255,255,0.6)
+    }
     </style>
 
     <script>
@@ -329,8 +364,6 @@
         easing: "linear",
         duration: forceDuration || starEl.data('duration'),
         progress: function(elements, complete, remaining, start, tweenValue) {
-
-
 
           // check for bucket catch
           starX = parseInt(elements[0].style.left);
@@ -527,6 +560,19 @@
       width = $(window).width();
     });
 
+    var displayMessage = function(mess, fadespeed, delay, displaylength, cb) {
+      setTimeout(function() {
+        $('#directions h1').html(mess);
+        $('#directions').fadeIn(fadespeed);
+        if (displaylength) {
+          setTimeout(function() {
+            $('#directions').fadeOut();
+            if (cb) cb();
+          }, displaylength);
+        }
+      }, delay);
+    };
+
 
     $(document).ready(function() {
 
@@ -606,11 +652,21 @@
 
         }
 
-        $('#directions h1').html('welcome to Star Catcher<br>' + engagement + ' the bucket to start');
-
         $(window).load(function() {
          // executes when complete page is fully loaded, including all frames, objects and images
-         $('#gamearea, #directions').fadeIn('slow');
+         $('#gamearea').fadeIn('slow', function() {
+           if (docCookies.hasItem('user')) {
+             displayMessage('welcome to Star Catcher<br>' + engagement + ' the bucket to start', 'slow', 200, 2600);
+           } else {
+             displayMessage('welcome to Star Catcher', 'slow', 200, 2000, function() {
+               setTimeout(function() {
+                 $('#username').focus();
+               }, 1600);
+               displayMessage('<table><tr><td colspan=2><h1>create a username</h1></td></tr><tr><td><input type="text" id="username"></td><td><button id="createuser" type="submit">submit</button></td></tr><tr><td colspan=2 id="username-response"></td></tr></table>', 'fast', 1500);
+             });
+           }
+         });
+
          $('#loading').remove();
         });
 
@@ -621,6 +677,20 @@
           }
         });
 
+        $(document).on('click', '#createuser', function() {
+          console.log('click');
+          mySocket.emit('usernameSubmit', {
+            username: $('#username').val()
+          });
+        });
+
+        $(document).on('keypress', '#username', function(event) {
+          if (event.which == 13) {
+              event.preventDefault();
+              $("#createuser").trigger('click');
+          }
+        });
+
         // $(document.body).on("mouseup", function (e) {
         //     if ($dragging) $dragging = null;
         // });
@@ -628,6 +698,14 @@
         $('img').on('dragstart', function(event) { event.preventDefault(); });
 
         mySocket = io();
+
+        mySocket.on('username-feedback', function(data) {
+
+          $('#username-response').removeClass('good bad');
+          $('#username-response').addClass(data.res);
+          $('#username-response').text('response: ' + data.msg);
+          
+        });
     });
     </script>
 
@@ -666,6 +744,7 @@
 
     <script src="js/velocity.min.js"></script>
     <script src="js/jquery.doubletap.js"></script>
+    <script src="js/mozilla-cookies.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
 
     <!-- GSAP -->
