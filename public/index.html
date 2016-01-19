@@ -847,6 +847,7 @@
           mySocket.emit('usernameSubmit', {
             username: $('#username').val()
           });
+          $(this).prop("disabled",true);
         });
 
         $(document).on('keypress', '#username', function(event) {
