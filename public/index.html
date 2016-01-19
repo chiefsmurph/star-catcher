@@ -507,7 +507,7 @@
         starEl.css('top', starStartY + 'px');
         $('#gamearea').append(starEl);
 
-        var duration = 1000 + Math.round(Math.random() * 2000);
+        var duration = 1000 + Math.round(Math.random() * 2000) - starsCaught*3;
         if (duration < 1500) {
           starEl.addClass('fast-star');
         }
@@ -704,7 +704,7 @@
           });
 
           $(document.body).on("touchmove", function(e) {
-              if ($dragging && mouseCount % 3 === 0) {
+              if ($dragging) {
                 moveBucket(e.originalEvent.touches[0].pageX-50);
               }
               mouseCount++;
