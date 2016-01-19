@@ -417,8 +417,12 @@
 
     var moveBucket = function(x) {
       bucketPos = x;
-      bucketTop.css("left", x + 'px');
-      bucketBottom.css("left", x + 'px');
+      // bucketTop.css("left", x + 'px');
+      // bucketBottom.css("left", x + 'px');
+      bucketTop.velocity("stop");
+      bucketTop.velocity({left: x+ 'px'}, 50);
+      bucketBottom.velocity("stop");
+      bucketBottom.velocity({left: x+ 'px'}, 50);
     };
 
     var showHighScores = function() {
@@ -700,7 +704,7 @@
           });
 
           $(document.body).on("touchmove", function(e) {
-              if ($dragging && mouseCount % 5 === 0) {
+              if ($dragging && mouseCount % 3 === 0) {
                 moveBucket(e.originalEvent.touches[0].pageX-50);
               }
               mouseCount++;
