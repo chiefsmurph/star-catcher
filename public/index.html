@@ -865,7 +865,7 @@
             $('#hs table tbody tr').eq(i).html([i+1, score.username, score.dateset, score.starscaught].map(function(what) {
               return "<td>" + what + "</td>";
             }));
-            if (score.username === userObj.username) {
+            if (userObj && score.username === userObj.username) {
               $('#hs table tbody tr').eq(i).children().addClass('me');
             }
           });
