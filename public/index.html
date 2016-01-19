@@ -386,6 +386,7 @@
     var needtoshowhs = false;
 
     var bucketTop, bucketBottom;
+    var mouseCount = 0;
 
     function Timer(fn, countdown) {
         var ident, complete = false;
@@ -416,8 +417,10 @@
 
     var moveBucket = function(x) {
       bucketPos = x;
-      bucketTop.style.left = (x + 'px');
-      bucketBottom.style.left = (x + 'px');
+      bucketTop.velocity({left: x + 'px'});
+      bucketBottom.velocity({left: x + 'px'});
+      // bucketTop.style.left = (x + 'px');
+      // bucketBottom.style.left = (x + 'px');
     };
 
     var showHighScores = function() {
@@ -699,9 +702,10 @@
           });
 
           $(document.body).on("touchmove", function(e) {
-              if ($dragging) {
+              if ($dragging && mouseCount % 5 === 0) {
                 moveBucket(e.originalEvent.touches[0].pageX-50);
               }
+              mouseCount++;
           });
 
           $(document.body).on("doubletap", function(e) {
@@ -898,8 +902,8 @@
     var addBucket = function() {
       $('body').append('<div id="bucket"><img src="img/topbucket.png" id="top"><img src="img/bottombucket.png" id="bottom"></div>');
 
-      bucketTop = document.getElementById('top');
-      bucketBottom = document.getElementById('bottom');
+      bucketTop = $('#top');
+      bucketBottom = $('#bottom');
     }
     </script>
 
