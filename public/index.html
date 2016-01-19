@@ -590,8 +590,9 @@
     var endOfGame = function(cb) {
 
       if (inGame) {
+        inGame = false;
+
         $('#scoreboard').animate({top: '-200px'}, 2000, function() {
-          inGame = false;
 
           for (var i=0; i<myTimeouts.length; i++) {
             myTimeouts[i].clear();
