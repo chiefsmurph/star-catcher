@@ -183,7 +183,7 @@ io.on('connection', function(socket) {
 
   socket.on('getHS', function() {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-      client.query('select distinct username, dateset, starscaught from players order by starscaught desc limit 10;', function(err, result) {
+      client.query('select distinct username, dateset, starscaught from players where starscaught > 0 order by starscaught desc limit 10', function(err, result) {
         done();
         if (err) console.error(err);
 
