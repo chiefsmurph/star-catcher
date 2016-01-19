@@ -103,7 +103,7 @@
     #gamearea {
       background-image: url('img/sky.jpg');
       background-size: cover;
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       height: 100%;
@@ -895,7 +895,7 @@
     });
 
     var addBucket = function() {
-      $('#gamearea').append('<div id="bucket"><img src="img/topbucket.png" id="top"><img src="img/bottombucket.png" id="bottom"></div>');
+      $('body').append('<div id="bucket"><img src="img/topbucket.png" id="top"><img src="img/bottombucket.png" id="bottom"></div>');
 
       bucketTop = document.getElementById('top');
       bucketBottom = document.getElementById('bottom');
