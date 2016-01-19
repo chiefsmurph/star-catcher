@@ -694,6 +694,8 @@
           engagement = 'tap';
           starStartY = -200;
 
+          $('#hs td').addClass('mobilehstd');
+
           $(document.body).on("touchstart", "#bucket", function (e) {
               $dragging = $('#bucket');
               if (!inGame) {
@@ -707,9 +709,9 @@
           });
 
           $(document.body).on("touchmove", function(e) {
-              // if ($dragging && mouseCount % 1 === 0) {
+              if ($dragging && mouseCount % 3 === 0) {
                 moveBucket(e.originalEvent.touches[0].pageX-50);
-              // }
+              }
               mouseCount++;
           });
 
