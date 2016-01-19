@@ -417,10 +417,8 @@
 
     var moveBucket = function(x) {
       bucketPos = x;
-      bucketTop.velocity({left: x + 'px'});
-      bucketBottom.velocity({left: x + 'px'});
-      // bucketTop.style.left = (x + 'px');
-      // bucketBottom.style.left = (x + 'px');
+      bucketTop.css("left", x + 'px');
+      bucketBottom.css("left", x + 'px');
     };
 
     var showHighScores = function() {
