@@ -17,7 +17,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(express.static(__dirname + '/public'));
 
-
 io.on('connection', function(socket) {
   console.log('connection');
 });
