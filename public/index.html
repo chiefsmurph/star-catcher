@@ -307,7 +307,7 @@
       width: 80%;
       height: 80%;
       position: absolute;
-      top: 10%;
+      top: 5%;
       left: 10%;
       background-color: rgba(255,255,255,0.1);
     }
@@ -317,7 +317,7 @@
     }
     #hs thead {
       background-color: rgba(255,255,255,0.7);
-      font-size: 6vh;
+      font-size: 2.5vh;
     }
     #hs table th {
       text-align: left;
@@ -417,7 +417,6 @@
     };
 
     var showHighScores = function() {
-      $('#scoreboard').animate({top: '-200px'}, 2000);
       mySocket.emit('getHS');
       needtoshowhs = true;
     };
@@ -526,6 +525,7 @@
         ga('send', 'winner');
 
         $('body').append('<div id="fireworks"><h1></h1></div>').hide().fadeIn();
+        $('#scoreboard').animate({top: '-200px'}, 2000);
 
         setTimeout(function() {
 
