@@ -334,8 +334,7 @@
 
     var moveBucket = function(x) {
       bucketPos = x;
-      $('#bucket #top').css('left', x + 'px');
-      $('#bucket #bottom').css('left', x + 'px');
+      console.log(x);
     };
 
     var animateStar = function(starEl, forceDuration) {
@@ -551,6 +550,12 @@
     var starImg = new Image();
     starImg.src = "img/golden-star-50.png";
 
+    var topBucket = new Image();
+    topBucket.src = "img/topbucket-100.png";
+
+    var bottomBucket = new Image();
+    bottomBucket.src = "img/bottombucket-100.png";
+
     var now, dt,
         last = new Date().getTime();
 
@@ -607,9 +612,13 @@
     var render = function(dt) {
       ctx.clearRect(0,0,canvas.width,canvas.height);
 
+      ctx.drawImage(topBucket,bucketPos,height-10-86);
+
       displayingStars.forEach(function(star) {
         ctx.drawImage(starImg,star.x,star.y);
       });
+
+      ctx.drawImage(bottomBucket,bucketPos,height-10-86);
 
     };
 
