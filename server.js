@@ -83,10 +83,10 @@ io.on('connection', function(socket) {
       };
 
 
-      if (data.username.length < 4 || data.username.length > 9) {
+      if (data.username.length < 4 || data.username.length > 11) {
         socket.emit('username-feedback', {
           res: 'bad',
-          msg: 'must be between 4-9 characters long'
+          msg: 'must be between 4-11 characters long'
         });
       } else if (data.username.indexOf(' ') !== -1) {
         socket.emit('username-feedback', {
@@ -183,7 +183,7 @@ io.on('connection', function(socket) {
 
   socket.on('getHS', function() {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-      client.query('SELECT * FROM players WHERE starscaught > 0 ORDER BY starscaught DESC LIMIT 10', function(err, result) {
+      client.query('select distinct username, dateset, starscaught from players order by starscaught desc limit 10;', function(err, result) {
         done();
         if (err) console.error(err);
 
