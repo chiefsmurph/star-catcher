@@ -382,7 +382,8 @@
     var userObj;
 
     var needtoshowhs = false;
-    var $bucketTop, $bucketBottom;
+
+    var bucketTop, bucketBottom;
 
     function Timer(fn, countdown) {
         var ident, complete = false;
@@ -413,8 +414,8 @@
 
     var moveBucket = function(x) {
       bucketPos = x;
-      $bucketTop.css('left', x + 'px');
-      $bucketBottom.css('left', x + 'px');
+      bucketTop.style.left = (x + 'px');
+      bucketBottom.style.left = (x + 'px');
     };
 
     var showHighScores = function() {
@@ -665,9 +666,6 @@
 
     $(document).ready(function() {
 
-        $bucketTop = $('#bucket #top');
-        $bucketBottom = $('#bucket #bottom');
-
         imgPreloads.forEach(function(imgUrl) {
           $('body').append('<img src="' + imgUrl + '" class="img-preload">');
         });
@@ -843,7 +841,7 @@
 
           if (data.res) {
             displayMessage('welcome back to Star Catcher, <span id="usr">' + userObj.username + '</span><hr>' + engagement + ' the bucket to start', 'slow', 200);
-            addBucket();
+            setTimeout(addBucket, 200);
           } else {
             displayMessage('hackzor');
           }
@@ -897,6 +895,9 @@
 
     var addBucket = function() {
       $('#gamearea').append('<div id="bucket"><img src="img/topbucket.png" id="top"><img src="img/bottombucket.png" id="bottom"></div>');
+
+      bucketTop = document.getElementById('top');
+      bucketBottom = document.getElementById('bottom');
     }
     </script>
 
