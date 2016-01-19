@@ -61,6 +61,16 @@
       -webkit-user-select: none;
       -o-user-select: none;
       cursor: default;
+      filter: brightness(0.4);
+    }
+    #gamearea {
+      -webkit-filter: brightness(125%);
+      filter:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' ><filter id='bright125'><feComponentTransfer><feFuncR type='linear' slope='1.25'/><feFuncG type='linear' slope='1.25' /><feFuncB type='linear' slope='1.25' /></feComponentTransfer></filter></svg>#bright125");
+      filter:brightness(125%);
+    }
+    #gamearea * {
+      -webkit-filter: none;
+      filter: none;
     }
     body {
       font-family: 'Audiowide', cursive;
@@ -450,7 +460,8 @@
         easing: "linear",
         duration: forceDuration || starEl.data('duration'),
         complete: function() {
-          if (inGame) {
+          console.log('complete');
+          if (inGame && !gamePaused) {
             var index = nocounts.indexOf($(this).data('duration'));
             if (index == -1) {
               starsFallen++;
@@ -557,9 +568,17 @@
 
     var pauseGame = function() {
       $('.star').each(function() {
-        $(this).stop();
-        $(this).addClass('star-paused');
+        var curCoords = $(this).position();
+        var dur = $(this).data('duration');
         nocounts.push($(this).data('duration'));
+        $(this).stop();
+        var pauseStar = $('<img src="img/golden-star-50.png" class="star star-paused">');
+        console.log(curCoords);
+        pauseStar.css('left', curCoords.left + 'px');
+        pauseStar.css('top', curCoords.top + 'px');
+        pauseStar.data('duration', dur);
+        $('#gamearea').append(pauseStar);
+
       });
       for (var i = 0; i < myTimeouts.length; i++) {
         console.log('pausing');
