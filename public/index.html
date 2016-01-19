@@ -417,6 +417,7 @@
     };
 
     var showHighScores = function() {
+      $('#scoreboard').animate({top: '-200px'}, 2000);
       mySocket.emit('getHS');
       needtoshowhs = true;
     };
