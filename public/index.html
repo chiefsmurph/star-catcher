@@ -676,6 +676,7 @@
           $(document.body).on("touchstart", "#bucket", function (e) {
               $dragging = $('#bucket');
               if (!inGame) {
+                $('#bucket').remove();
                 $('#directions').fadeOut('slow', function() {
                   $('#scoreboard').animate({top: '10px'}, 2000, function() {
                     startGame();
