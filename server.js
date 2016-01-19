@@ -165,6 +165,7 @@ io.on('connection', function(socket) {
             //console.log(queryText);
 
             client.query(queryText, function(err, result) {
+              done();
               if (err) console.error(err);
               socket.emit('hsSuccess', {
                 handshake: handshake,
@@ -183,6 +184,7 @@ io.on('connection', function(socket) {
   socket.on('getHS', function() {
     pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
       client.query('SELECT * FROM players WHERE starscaught > 0 ORDER BY starscaught DESC LIMIT 10', function(err, result) {
+        done();
         if (err) console.error(err);
 
         var passing = [];
