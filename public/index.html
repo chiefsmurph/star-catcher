@@ -350,7 +350,7 @@
       z-index: 10;
     }
     .mobilehstd {
-      padding: 1px 10px;
+      padding: 1px 10px !important;
     }
     </style>
 
@@ -691,8 +691,6 @@
           engagement = 'tap';
           starStartY = -200;
 
-          $('#hs td').addClass('mobilehstd');
-
           $(document.body).on("touchstart", "#bucket", function (e) {
               $dragging = $('#bucket');
               if (!inGame) {
@@ -938,6 +936,10 @@
                 $('#bucket').show();
               }, 500);
             }, 1200);
+          }
+
+          if (engagement === "tap") {
+            $('#hs td').addClass('mobilehstd');
           }
 
 
