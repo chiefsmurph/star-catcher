@@ -158,6 +158,8 @@ io.on('connection', function(socket) {
         var nowTime = new Date().getTime();
         var ratio = data.starsCaught / (nowTime-startTime) ;
 
+        console.log(data.username + ' submitting ' + data.starsCaught + ' (ratio: ' + ratio + ')');
+
         if (startTime && ratio < 0.006) {
 
           startTime = null;
