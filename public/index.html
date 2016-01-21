@@ -943,7 +943,11 @@
             displayMessage('welcome back to Star Catcher,<br><span id="usr">' + userObj.username + '</span><hr>' + engagement + ' the bucket to start<br><button id="viewhs">...or view leaderboard</button>', 'slow', 200);
             setTimeout(addBucket, 200);
           } else {
-            displayMessage('hackzor');
+            displayMessage('hackzo0r');
+            setTimeout(function() {
+              docCookies.removeItem('userStatus');
+              location.reload();
+            }, 4000);
           }
 
         });
