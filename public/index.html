@@ -71,7 +71,7 @@
       -webkit-filter: none;
       filter: none;
     }*/
-    body {
+    body * {
       font-family: 'Audiowide', cursive;
     }
     #directions {
@@ -90,7 +90,19 @@
       background-color: rgba(255,255,255,0.4);
       border-radius: 10px;
       padding: 2vw 1vh;
+      font-size: 131%;
       box-shadow: 10px 10px 5px rgba(0,0,0,0.5);
+    }
+    #directions > h1 button {
+      border: 1px solid black;
+      font-size: 1em;
+      padding: 5px 25px;
+      margin-top: 10px;
+      outline: 0;
+    }
+    #directions > h1 button:hover {
+      background-color: yellow;
+      cursor: pointer;
     }
     #fireworks {
       position: absolute;
@@ -314,15 +326,17 @@
     #hs {
       display: none;
       width: 96%;
-      height: 96%;
       position: absolute;
       top: 2%;
       left: 2%;
-      background-color: rgba(255,255,255,0.1);
+      background-color: rgba(190, 179, 63, 0.66);
+      padding: 3px 0 10px;
+      border-radius: 5px 5px 0 0;
     }
     #hs table {
       width: 98%;
       margin: 0 auto;
+      background-color: rgba(123, 122, 151, 0.5);
     }
     #hs thead {
       background-color: rgba(255,255,255,0.7);
@@ -346,7 +360,12 @@
     }
     #hs-mess {
       text-align: center;
-      margin: 10px;
+      margin: 10px 10px 20px;
+      font-variant: small-caps;
+      font-size: 2em;
+      font-weight: bold;
+      text-decoration: underline;
+      line-height: 0.8;
     }
     #usr {
       font-size: 150%;
@@ -677,6 +696,7 @@
     });
 
     var displayMessage = function(mess, fadespeed, delay, displaylength, cb) {
+
       setTimeout(function() {
         $('#directions h1').html(mess);
         $('#directions').fadeIn(fadespeed);
@@ -771,7 +791,7 @@
 
         }
 
-        $('#hs-mess').text(engagement + ' the bucket to play again');
+        $('#hs-mess').text(engagement + ' the bucket to start new game');
 
 
         var checkForCollisions = function() {
@@ -849,6 +869,17 @@
           });
         });
 
+        $(document).on('click', '#viewhs', function() {
+          $('#directions').fadeOut(2000, function() {
+            setTimeout(function() {
+              $('#hs').slideDown({
+                  duration: 1800,
+                  easing: 'linear'
+              });
+            }, 0);
+          });
+        });
+
         $(document).on('keypress', '#username', function(event) {
           if (event.which == 13) {
               event.preventDefault();
@@ -909,7 +940,7 @@
         mySocket.on('login-feedback', function(data) {
 
           if (data.res) {
-            displayMessage('welcome back to Star Catcher, <span id="usr">' + userObj.username + '</span><hr>' + engagement + ' the bucket to start', 'slow', 200);
+            displayMessage('welcome back to Star Catcher,<br><span id="usr">' + userObj.username + '</span><hr>' + engagement + ' the bucket to start<br><button id="viewhs">...or view leaderboard</button>', 'slow', 200);
             setTimeout(addBucket, 200);
           } else {
             displayMessage('hackzor');
@@ -969,7 +1000,8 @@
     });
 
     var addBucket = function() {
-      $('body').append('<div id="bucket"><img src="img/topbucket.png" id="top"><img src="img/bottombucket.png" id="bottom"></div>');
+      var theBucket = $('<div id="bucket"><img src="img/topbucket.png" id="top"><img src="img/bottombucket.png" id="bottom"></div>').hide().fadeIn();
+      $('body').append(theBucket);
 
       bucketTop = $('#top');
       bucketBottom = $('#bottom');
