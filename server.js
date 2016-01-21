@@ -157,10 +157,10 @@ io.on('connection', function(socket) {
 
         var nowTime = new Date().getTime();
         var ratio = data.starsCaught / (nowTime-startTime) ;
-        startTime = null;
-        
+
         if (startTime && ratio < 0.006) {
 
+          startTime = null;
 
           // update with new record
           var handshake = uuid.v1();
