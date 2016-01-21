@@ -980,7 +980,8 @@
           }
 
           data.scores.forEach(function(score, i) {
-            $('#hs table tbody tr').eq(i).html([i+1, score.username, score.dateset, score.starscaught].map(function(what) {
+            var theDate = (engagement === 'tap') ? score.dataset.substring(0,5) : score.dataset;
+            $('#hs table tbody tr').eq(i).html([i+1, score.username, theDate, score.starscaught].map(function(what) {
               return "<td>" + what + "</td>";
             }));
             if (userObj && score.username === userObj.username) {
