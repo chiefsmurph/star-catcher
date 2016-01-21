@@ -148,12 +148,18 @@ io.on('connection', function(socket) {
   });
 
   socket.on('sendScore', function(data) {
+
     verifyUser({
       username: data.username,
       handshake: data.handshake
     }, function(authorized) {
       if (authorized) {
-        if (startTime) {
+
+        var nowTime = new Date().getTime();
+        var ratio = data.starsCaught / (nowTime-startTime) ;
+        startTime = null;
+        
+        if (startTime && ratio < 0.006) {
 
 
           // update with new record
@@ -179,7 +185,12 @@ io.on('connection', function(socket) {
         }
       } else {
         console.log('attack mode');
+        socket.emit('hsSuccess', {
+          handshake: 'suckonthat',
+          starsCaught: data.starsCaught
+        });
       }
+
     });
   });
 
