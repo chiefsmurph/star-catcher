@@ -846,8 +846,12 @@
                setTimeout(function() {
                  $('#username').focus();
                }, 1600);
-               displayMessage('<table><tr><td colspan=2><h1>create a username</h1></td></tr><tr><td><input type="text" id="username"></td><td><button id="createuser" type="submit">submit</button></td></tr><tr><td colspan=2 id="username-response"></td></tr></table>', 'fast', 1500);
-             });
+               if (engagement === 'click') {
+                 displayMessage('<table><tr><td colspan=2><h1>create a username</h1></td></tr><tr><td><input type="text" id="username"></td><td><button id="createuser" type="submit">submit</button></td></tr><tr><td colspan=2 id="username-response"></td></tr></table>', 'fast', 1500);
+               } else {
+                 displayMessage('<h1>create a username</h1><input type="text" id="username"><br><button id="createuser" type="submit">submit</button><div id="username-response"></div>', 'fast', 1500);
+               }
+                  });
            }
            mySocket.emit('getHS');
          });
