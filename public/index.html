@@ -339,9 +339,10 @@
     }
     .fb-like {
       position: absolute !important;
-      bottom: 2%;
-      right: 5%;
-      margin: 30px 50px auto 0;
+      top: 5px;
+      left: 5px;
+      /*margin: 30px 50px auto 0;*/
+      z-index: 10000;
     }
     #hs table {
       width: 98%;
@@ -614,6 +615,7 @@
       }
       $('body').append('<h1 class="message">game paused<br>double ' + engagement + ' to resume</h1>');
       gamePaused = !gamePaused;
+      $('.fb-like').fadeIn();
     };
 
     var resumeGame = function() {
@@ -628,6 +630,7 @@
         myTimeouts[i].resume();
       }
       gamePaused = !gamePaused;
+      $('.fb-like').fadeOut();
     };
 
     var endOfGame = function(cb) {
