@@ -337,6 +337,12 @@
       padding: 3px 0 10px;
       border-radius: 5px 5px 0 0;
     }
+    .fb-like {
+      position: absolute !important;
+      bottom: 2%;
+      right: 5%;
+      margin: 30px 50px auto 0;
+    }
     #hs table {
       width: 98%;
       margin: 0 auto;
@@ -738,6 +744,7 @@
               $dragging = $('#bucket');
               if (!inGame) {
                 $('#hs').fadeOut();
+                $('.fb-like').fadeOut();
                 $('#directions').fadeOut('slow', function() {
                   $('#scoreboard').animate({top: '10px'}, 2000, function() {
                     startGame();
@@ -769,6 +776,7 @@
               $dragging = ($dragging) ? null : true;
               if (!inGame) {
                 $('#hs').fadeOut();
+                $('.fb-like').fadeOut();
                 $('#directions').fadeOut('slow', function() {
                   $('#scoreboard').animate({top: '10px'}, 2000, function() {
                     startGame();
@@ -832,6 +840,7 @@
 
         $(window).load(function() {
 
+          $('.fb-like').hide();
 
           requestAnimFrame(checkForCollisions);
 
@@ -882,7 +891,11 @@
             setTimeout(function() {
               $('#hs').slideDown({
                   duration: 1800,
-                  easing: 'linear'
+                  easing: 'linear',
+                  complete: function() {
+                    console.log('asdasd')
+                    $('.fb-like').fadeIn();
+                  }
               });
             }, 0);
           });
@@ -993,7 +1006,9 @@
 
 
           if (needtoshowhs) {
-            $('#hs').fadeIn();
+            $('#hs').fadeIn(1000, function() {
+              $('.fb-like').fadeIn();
+            });
             needtoshowhs = false;
             setTimeout(function() {
               moveBucket(10);
@@ -1024,6 +1039,15 @@
 
   </head>
   <body>
+
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=1952429408314567";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
 
     <div id="loading">loading</div>
 
@@ -1069,6 +1093,8 @@
     <div id="directions">
       <h1></h1>
     </div>
+
+    <div class="fb-like" data-href="http://www.facebook.com/StarCatcherGame" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
 
     <div id="hs">
       <div id="hs-mess"></div>
