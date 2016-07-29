@@ -128,6 +128,7 @@
     #gamearea {
       background-image: url('img/sky-bright.jpg');
       background-size: cover;
+      background-position: 10% left;
       position: absolute;
       top: 0;
       left: 0;
@@ -469,6 +470,13 @@
         return { clear: cancel, pause: pause, resume: resume };
     }
 
+    var clearAllTimeouts = function() {
+      myTimeouts.forEach(function(timer) {
+        timer.clear();
+      });
+      myTimeouts = [];
+    }
+
     var moveBucket = function(x) {
       bucketPos = x;
       // bucketTop.css("left", x + 'px');
@@ -547,13 +555,13 @@
         starEl.css('top', starStartY + 'px');
         $('#gamearea').append(starEl);
 
-        var duration = 1600 + Math.round(Math.random() * 2000) - starsCaught*3.5;
+        var duration = 1600 + Math.round(Math.random() * 1000) - starsCaught*4.5;
         if (duration < 1500) {
           starEl.addClass('fast-star');
         }
 
         starEl.data('duration', duration);
-
+        console.log(duration);
         setTimeout(function() {
           if (!gamePaused) {
             animateStar(starEl);
@@ -640,10 +648,7 @@
 
         $('#scoreboard').animate({top: '-200px'}, 2000, function() {
 
-          for (var i=0; i<myTimeouts.length; i++) {
-            myTimeouts[i].clear();
-          }
-          timesouts = [];
+          clearAllTimeouts();
 
           $('#bucket').hide();
           $('.star').each(function() {
@@ -671,6 +676,7 @@
       $('.message').remove();
 
       // handle levelData
+      debugger;
       levelData.forEach(function(star, index) {
         myTimeouts.push(new Timer(function() {
           dropStar(star.x);
@@ -690,6 +696,9 @@
       }, 559999));  // ~ 9 minutes
 
       inGame = true;
+
+      pauseGame();
+      resumeGame();
     };
 
     var screenSaverStars = function() {
@@ -997,7 +1006,6 @@
           }
 
           data.scores.forEach(function(score, i) {
-            debugger;
             var theDate = (engagement === 'tap') ? score.dateset.substring(0,5) : score.dateset;
             $('#hs table tbody tr').eq(i).html([i+1, score.username, theDate, score.starscaught].map(function(what) {
               return "<td>" + what + "</td>";

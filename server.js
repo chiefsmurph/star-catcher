@@ -58,80 +58,80 @@ io.on('connection', function(socket) {
 
   console.log('connection');
 
-  socket.on('usernameSubmit', function(data) {
-    console.log(data.username);
-    setTimeout(function() {
+    socket.on('usernameSubmit', function(data) {
+      console.log(data.username);
+      setTimeout(function() {
 
-      var checkForBadWords = function(name) {
-        var includesBad = false;
-        var badWords = ['fuck', 'cock', 'pus', 'dick', 'bastard', 'cunt', 'ass', 'nig', 'bitch'];
-        for (var i = 0; i < badWords.length; i++) {
-          if (data.username.toLowerCase().indexOf(badWords[i]) !== -1) {
-            includesBad = true;
+        var checkForBadWords = function(name) {
+          var includesBad = false;
+          var badWords = ['fuck', 'cock', 'pus', 'dick', 'bastard', 'cunt', 'ass', 'nig', 'bitch'];
+          for (var i = 0; i < badWords.length; i++) {
+            if (data.username.toLowerCase().indexOf(badWords[i]) !== -1) {
+              includesBad = true;
+            }
           }
-        }
-        return includesBad;
-      };
+          return includesBad;
+        };
 
-      var checkForAlreadyUsed = function(name) {
-        var taken = false;
-        users.forEach(function(userObj) {
-          if (name === userObj.username) {
-            taken = true;
-          }
-        });
-        return taken;
-      };
-
-
-      if (data.username.length < 4 || data.username.length > 11) {
-        socket.emit('username-feedback', {
-          res: 'bad',
-          msg: 'must be between 4-11 characters long'
-        });
-      } else if (data.username.indexOf(' ') !== -1) {
-        socket.emit('username-feedback', {
-          res: 'bad',
-          msg: 'must not include spaces'
-        });
-      } else if (checkForBadWords(data.username)) {
-        socket.emit('username-feedback', {
-          res: 'bad',
-          msg: 'no curse words'
-        });
-      } else if (checkForAlreadyUsed(data.username)) {
-        socket.emit('username-feedback', {
-          res: 'bad',
-          msg: 'username already taken'
-        });
-      } else if (!username) {
-
-        var handshake = uuid.v1();
-
-        pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
-          var queryText = 'INSERT INTO players (username, dateset, starscaught, handshake) VALUES($1, $2, $3, $4)';
-          client.query(queryText, [data.username, 'today', 0, handshake], function(err, result) {
-
-            username = data.username;
-
-            if (err)  console.error(err);
-
-            done();
-            console.log('created new user ' + data.username);
-            socket.emit('username-feedback', {
-              res: 'good',
-              msg: 'congratulations, you are good to go',
-              handshake: handshake
-            });
-
+        var checkForAlreadyUsed = function(name) {
+          var taken = false;
+          users.forEach(function(userObj) {
+            if (name === userObj.username) {
+              taken = true;
+            }
           });
-        });
+          return taken;
+        };
+
+
+        if (data.username.length < 4 || data.username.length > 11) {
+          socket.emit('username-feedback', {
+            res: 'bad',
+            msg: 'must be between 4-11 characters long'
+          });
+        } else if (data.username.indexOf(' ') !== -1) {
+          socket.emit('username-feedback', {
+            res: 'bad',
+            msg: 'must not include spaces'
+          });
+        } else if (checkForBadWords(data.username)) {
+          socket.emit('username-feedback', {
+            res: 'bad',
+            msg: 'no curse words'
+          });
+        } else if (checkForAlreadyUsed(data.username)) {
+          socket.emit('username-feedback', {
+            res: 'bad',
+            msg: 'username already taken'
+          });
+        } else if (!username) {
+
+          var handshake = uuid.v1();
+
+          pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+            var queryText = 'INSERT INTO players (username, dateset, starscaught, handshake) VALUES($1, $2, $3, $4)';
+            client.query(queryText, [data.username, 'today', 0, handshake], function(err, result) {
+
+              username = data.username;
+
+              if (err)  console.error(err);
+
+              done();
+              console.log('created new user ' + data.username);
+              socket.emit('username-feedback', {
+                res: 'good',
+                msg: 'congratulations, you are good to go',
+                handshake: handshake
+              });
+
+            });
+          });
 
 
 
-      }
+        }
 
-    }, 1000);
+      }, 1000);
   });
 
   socket.on('verifyLogin', function(userObj) {
