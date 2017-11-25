@@ -10,7 +10,7 @@ server.listen(port);
 
 var io = require('socket.io')(server);
 console.log('listening for http and socket requests on port ' + port);
-
+console.log('process.env.DATABASE_URL', process.env.DATABASE_URL);
 var bodyParser = require('body-parser')
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
