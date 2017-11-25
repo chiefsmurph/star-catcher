@@ -22,11 +22,13 @@ app.use(express.static(__dirname + '/public'));
 
 var users = [];
 
+// CREATE TABLE players
+
 // read all users
 pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
   var queryText = 'SELECT * FROM players';
   client.query(queryText, function(err, result) {
-
+    console.log(err, result);
     done();
     users = result.rows;
 
