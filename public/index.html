@@ -32,8 +32,8 @@
     <meta name="robots" content="index,follow" />
     <meta name="reply-to" content="mrcalgaryjames@gmail.com">
     <meta name="owner" content="">
-    <meta name="url" content="http://www.starcatchergame.com">
-    <meta name="identifier-URL" content="http://www.starcatchergame.com">
+    <!-- <meta name="url" content="http://www.starcatchergame.com">
+    <meta name="identifier-URL" content="http://www.starcatchergame.com"> -->
     <meta name="revisit-after" content="7 days">
     <meta http-equiv="Expires" content="0">
     <meta http-equiv="Pragma" content="no-cache">
@@ -41,12 +41,12 @@
 
     <meta name="og:title" content="Star Catcher - The Game"/>
     <meta name="og:type" content="game"/>
-    <meta name="og:url" content="http://www.starcatchergame.com"/>
-    <meta name="og:image" content="http://www.starcatchergame.com/img/golden-star.svg.png"/>
+    <!-- <meta name="og:url" content=""/> -->
+    <meta name="og:image" content="img/golden-star.svg.png"/>
     <meta name="og:site_name" content="Star Catcher"/>
     <meta name="og:description" content="Catch flying stars in your bucket"/>
 
-    <meta name="og:email" content="mrcalgaryjames@gmail.com"/>
+    <!-- <meta name="og:email" content="mrcalgaryjames@gmail.com"/> -->
     <meta name="og:postal-code" content="94541"/>
     <meta name="og:country-name" content="USA"/>
 
@@ -126,7 +126,7 @@
       -webkit-text-stroke-color: orange;
     }
     #gamearea {
-      background-image: url('img/sky-bright.jpg');
+      background-image: url('/starcatcher/img/sky-bright.jpg');
       background-size: cover;
       background-position: 10% left;
       position: absolute;
@@ -427,7 +427,7 @@
     var starStartY = -50;
 
     var starX, starY, bucketPos;
-    var imgPreloads = ['img/fireworks.gif', 'img/golden-star-sml.png'];
+    var imgPreloads = ['/starcatcher/img/fireworks.gif', '/starcatcher/img/golden-star-sml.png'];
     var engagement = 'click';
 
     var starsFallen;
@@ -926,7 +926,7 @@
 
         $('img').on('dragstart', function(event) { event.preventDefault(); });
 
-        mySocket = io();
+        mySocket = io('/starcatcher');
 
         mySocket.on('username-feedback', function(data) {
 
@@ -1091,8 +1091,8 @@
 
 
     <!-- <script src="js/velocity.min.js"></script> -->
-    <script src="js/jquery.doubletap.js"></script>
-    <script src="js/mozilla-cookies.js"></script>
+    <script src="/starcatcher/js/jquery.doubletap.js"></script>
+    <script src="/starcatcher/js/mozilla-cookies.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
 
     <!-- GSAP -->
