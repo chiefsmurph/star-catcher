@@ -926,7 +926,7 @@
 
         $('img').on('dragstart', function(event) { event.preventDefault(); });
 
-        mySocket = io('/starcatcher');
+        mySocket = io.connect('/starcatcher');
 
         mySocket.on('username-feedback', function(data) {
 
