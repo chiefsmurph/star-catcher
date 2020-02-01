@@ -41,7 +41,7 @@ pg.connect(pgString, function(err, client, done) {
 
 var verifyUser = function(userObj, cb) {
   console.log('verifying...' + JSON.stringify(userObj));
-  pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+  pg.connect(pgString, function(err, client, done) {
     var queryText = 'SELECT * FROM players WHERE username = \'' + userObj.username + '\' AND handshake = \'' + userObj.handshake + '\'';
     client.query(queryText, function(err, result) {
 
@@ -113,7 +113,7 @@ io.on('connection', function(socket) {
 
           var handshake = uuid.v1();
 
-          pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+          pg.connect(pgString, function(err, client, done) {
             var queryText = 'INSERT INTO players (username, dateset, starscaught, handshake) VALUES($1, $2, $3, $4)';
             client.query(queryText, [data.username, 'today', 0, handshake], function(err, result) {
 
@@ -172,7 +172,7 @@ io.on('connection', function(socket) {
           // update with new record
           var handshake = uuid.v1();
 
-          pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+          pg.connect(pgString, function(err, client, done) {
             //console.log('about to insert');
             var dateNow = new Date().toISOString().slice(0, 10);
             dateNow = dateNow.substr(5) + '-' + dateNow.substr(0, 4);
@@ -203,7 +203,7 @@ io.on('connection', function(socket) {
 
 
   socket.on('getHS', function() {
-    pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+    pg.connect(pgString, function(err, client, done) {
       client.query('select distinct username, dateset, starscaught from players where starscaught > 0 order by starscaught desc limit 10', function(err, result) {
         done();
         if (err) console.error(err);
