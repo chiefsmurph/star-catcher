@@ -3,6 +3,7 @@ var express = require('express');
 var util = require('util');
 var app = express();
 var server = require('http').Server(app);
+const { pgString } = require('./config');
 var uuid = require('node-uuid');
 
 var port = process.env.PORT || 5000; // Use the port that Heroku
@@ -25,7 +26,9 @@ var users = [];
 // CREATE TABLE players
 
 // read all users
-pg.connect(process.env.DATABASE_URL + "?ssl=true", function(err, client, done) {
+
+pg.connect(pgString, function(err, client, done) {
+  console.log(err)
   var queryText = 'SELECT * FROM players';
   client.query(queryText, function(err, result) {
     console.log(err, result);
