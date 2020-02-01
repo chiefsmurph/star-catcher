@@ -548,7 +548,7 @@
 
     var dropStar = function(x) {
       if (inGame && !gamePaused) {
-        var starEl = $('<img src="img/golden-star-sml.png" class="star">');
+        var starEl = $('<img src="/starcatcher/img/golden-star-sml.png" class="star">');
 
         x = (x) ? width * x / 100 : Math.round(Math.random() * (width-50) );
         starEl.css('left', x + 'px' );
@@ -609,7 +609,7 @@
         var dur = $(this).data('duration');
         nocounts.push($(this).data('duration'));
         $(this).stop();
-        var pauseStar = $('<img src="img/golden-star-50.png" class="star star-paused">');
+        var pauseStar = $('<img src="/starcatcher/img/golden-star-50.png" class="star star-paused">');
         console.log(curCoords);
         pauseStar.css('left', curCoords.left + 'px');
         pauseStar.css('top', curCoords.top + 'px');
