@@ -9,7 +9,7 @@ var uuid = require('node-uuid');
 var port = process.env.PORT || 5000; // Use the port that Heroku
 server.listen(port);
 
-var io = require('socket.io')(server);
+var io = require(socket.io')(server);
 console.log('listening for http and socket requests on port ' + port);
 console.log('process.env.DATABASE_URL', process.env.DATABASE_URL);
 var bodyParser = require('body-parser')
