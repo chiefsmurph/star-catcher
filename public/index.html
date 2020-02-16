@@ -858,9 +858,9 @@
 
          // executes when complete page is fully loaded, including all frames, objects and images
          $('#gamearea').fadeIn('slow', function() {
-           if (docCookies.hasItem('userStatus')) {
+           if (docCookies.hasItem('STARCATCHERUSERSTATUS')) {
 
-             userObj = JSON.parse(docCookies.getItem('userStatus'));
+             userObj = JSON.parse(docCookies.getItem('STARCATCHERUSERSTATUS'));
              mySocket.emit('verifyLogin', userObj);
              console.log('verify', userObj);
 
@@ -938,7 +938,7 @@
 
             $('#createuser').prop("disabled",true);
 
-            docCookies.setItem('userStatus', JSON.stringify({
+            docCookies.setItem('STARCATCHERUSERSTATUS', JSON.stringify({
       				username: $('#username').val(),
       				starsCaught: '0',
       				handshake: data.handshake
@@ -978,7 +978,7 @@
           } else {
             //displayMessage('hackz0r');
             //setTimeout(function() {
-              docCookies.removeItem('userStatus');
+              docCookies.removeItem('STARCATCHERUSERSTATUS');
               location.reload();
             //}, 4000);
           }
@@ -988,7 +988,7 @@
         mySocket.on('hsSuccess', function(data) {
           userObj.starsCaught = data.starsCaught;
           userObj.handshake = data.handshake;
-          docCookies.setItem('userStatus', JSON.stringify({
+          docCookies.setItem('STARCATCHERUSERSTATUS', JSON.stringify({
             username: userObj.username,
             starsCaught: data.starsCaught,
             handshake: data.handshake
