@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
+    "pm2start": "PORT=3010 pm2 start server.js --name star-catcher",
     "startheroku": "DATABASE_URL=$(heroku config:get DATABASE_URL -a thawing-cove-1839) node server.js"
   },
   "repository": {
