@@ -4,13 +4,13 @@ var express = require('express');
 var util = require('util');
 var app = express();
 
-var options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/cert.pem'),
-  ca: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/chain.pem')
-};
+// var options = {
+//   key: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/privkey.pem'),
+//   cert: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/cert.pem'),
+//   ca: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/chain.pem')
+// };
 
-var server = require('https').Server(app, options);
+var server = require('http').Server(app, options);
 const { pgString } = require('./config');
 var uuid = require('node-uuid');
 
@@ -18,7 +18,7 @@ var port = process.env.PORT || 5000; // Use the port that Heroku
 server.listen(port);
 
 var io = require('socket.io')(server, {
-  path: '/starcatcher/socket.io'
+  // path: '/starcatcher/socket.io'
 });
 console.log('listening for http and socket requests on port ' + port);
 // console.log('process.env.DATABASE_URL', process.env.DATABASE_URL);
