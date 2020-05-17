@@ -10,12 +10,12 @@ var app = express();
 //   ca: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/chain.pem')
 // };
 
-var server = require('http').Server(app);
+// var server = require('http').Server(app);
 const { pgString } = require('./config');
 var uuid = require('node-uuid');
 
 var port = process.env.PORT || 5000; // Use the port that Heroku
-server.listen(port);
+const server = app.listen(port);
 
 var io = require('socket.io')(server, {
   // path: '/starcatcher/socket.io'
