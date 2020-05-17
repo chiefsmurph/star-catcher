@@ -926,7 +926,7 @@
 
         $('img').on('dragstart', function(event) { event.preventDefault(); });
 
-        mySocket = io.connect('http://23.237.87.144:3010');
+        mySocket = io.connect();
 
         mySocket.on('username-feedback', function(data) {
 
