@@ -2,7 +2,14 @@ var pg = require('pg');
 var express = require('express');
 var util = require('util');
 var app = express();
-var server = require('http').Server(app);
+
+var options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/cert.pem'),
+  ca: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/chain.pem')
+};
+
+var server = require('https').Server(app, options);
 const { pgString } = require('./config');
 var uuid = require('node-uuid');
 
