@@ -10,7 +10,7 @@ var app = express();
 //   ca: fs.readFileSync('/etc/letsencrypt/live/chiefsmurph.com/chain.pem')
 // };
 
-var server = require('http').Server(app, options);
+var server = require('http').Server(app);
 const { pgString } = require('./config');
 var uuid = require('node-uuid');
 
