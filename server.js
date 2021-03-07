@@ -1,4 +1,9 @@
-var pg = require('pg');
+const { pgString } = require('./config');
+var { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: pgString
+});
 var fs = require('fs');
 var express = require('express');
 var util = require('util');
@@ -11,7 +16,6 @@ var app = express();
 // };
 
 // var server = require('http').Server(app);
-const { pgString } = require('./config');
 var uuid = require('node-uuid');
 
 var port = process.env.PORT || 5000; // Use the port that Heroku
@@ -37,31 +41,20 @@ var users = [];
 
 // read all users
 
-pg.connect(pgString, function(err, client, done) {
-  console.log(err)
-  var queryText = 'SELECT * FROM players';
-  client.query(queryText, function(err, result) {
+pool.query('SELECT * FROM players', function(err, result) {
     console.log(err, result);
-    done();
     users = result.rows;
-
-  });
 });
 
 
 var verifyUser = function(userObj, cb) {
   console.log('verifying...' + JSON.stringify(userObj));
-  pg.connect(pgString, function(err, client, done) {
-    var queryText = 'SELECT * FROM players WHERE username = \'' + userObj.username + '\' AND handshake = \'' + userObj.handshake + '\'';
-    client.query(queryText, function(err, result) {
-
-      done();
+  var queryText = 'SELECT * FROM players WHERE username = \'' + userObj.username + '\' AND handshake = \'' + userObj.handshake + '\'';
+  pool.query(queryText, function(err, result) {
       if (err)  console.error(err);
       var authorized = (result.rows.length);
       console.log('checking user ' + userObj.username + ' ' + authorized);
       cb(authorized);
-
-    });
   });
 }
 
@@ -122,24 +115,20 @@ io.on('connection', function(socket) {
         } else if (!username) {
 
           var handshake = uuid.v1();
+          var queryText = 'INSERT INTO players (username, dateset, starscaught, handshake) VALUES($1, $2, $3, $4)';
+    
+          pool.query(queryText, [data.username, 'today', 0, handshake], function(err, result) {
 
-          pg.connect(pgString, function(err, client, done) {
-            var queryText = 'INSERT INTO players (username, dateset, starscaught, handshake) VALUES($1, $2, $3, $4)';
-            client.query(queryText, [data.username, 'today', 0, handshake], function(err, result) {
+            username = data.username;
 
-              username = data.username;
-
-              if (err)  console.error(err);
-
-              done();
-              console.log('created new user ' + data.username);
-              socket.emit('username-feedback', {
-                res: 'good',
-                msg: 'congratulations, you are good to go',
-                handshake: handshake
-              });
-
+            if (err)  console.error(err);
+            console.log('created new user ' + data.username);
+            socket.emit('username-feedback', {
+              res: 'good',
+              msg: 'congratulations, you are good to go',
+              handshake: handshake
             });
+
           });
 
 
@@ -182,21 +171,18 @@ io.on('connection', function(socket) {
           // update with new record
           var handshake = uuid.v1();
 
-          pg.connect(pgString, function(err, client, done) {
-            //console.log('about to insert');
-            var dateNow = new Date().toISOString().slice(0, 10);
-            dateNow = dateNow.substr(5) + '-' + dateNow.substr(0, 4);
-            var queryText = 'UPDATE "players" SET "handshake"=\'' + handshake + '\', "starscaught"=' + data.starsCaught + ', "dateset"=\'' + dateNow + '\' WHERE "username"=\'' + data.username + '\'';
+          //console.log('about to insert');
+          var dateNow = new Date().toISOString().slice(0, 10);
+          dateNow = dateNow.substr(5) + '-' + dateNow.substr(0, 4);
+          var queryText = 'UPDATE "players" SET "handshake"=\'' + handshake + '\', "starscaught"=' + data.starsCaught + ', "dateset"=\'' + dateNow + '\' WHERE "username"=\'' + data.username + '\'';
 
-            //console.log(queryText);
+          //console.log(queryText);
 
-            client.query(queryText, function(err, result) {
-              done();
-              if (err) console.error(err);
-              socket.emit('hsSuccess', {
-                handshake: handshake,
-                starsCaught: data.starsCaught
-              });
+          pool.query(queryText, function(err, result) {
+            if (err) console.error(err);
+            socket.emit('hsSuccess', {
+              handshake: handshake,
+              starsCaught: data.starsCaught
             });
           });
         }
@@ -213,26 +199,22 @@ io.on('connection', function(socket) {
 
 
   socket.on('getHS', function() {
-    pg.connect(pgString, function(err, client, done) {
-      client.query('select distinct username, dateset, starscaught from players where starscaught > 0 order by starscaught desc limit 10', function(err, result) {
-        done();
-        if (err) console.error(err);
+    pool.query('select distinct username, dateset, starscaught from players where starscaught > 0 order by starscaught desc limit 10', function(err, result) {
+      if (err) console.error(err);
 
-        var passing = [];
-        result.rows.forEach(function(row) {
-          passing.push({
-            username: row.username,
-            starscaught: row.starscaught,
-            dateset: row.dateset
-          })
-        });
+      var passing = [];
+      result.rows.forEach(function(row) {
+        passing.push({
+          username: row.username,
+          starscaught: row.starscaught,
+          dateset: row.dateset
+        })
+      });
 
-        socket.emit('hs', {
-          scores: passing
-        });
+      socket.emit('hs', {
+        scores: passing
       });
     });
-
   });
 
 });
